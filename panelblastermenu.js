@@ -191,11 +191,11 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             this._scrollViewMenuSection.actor.add_child(this._channelScrollView);
             this.menu.addMenuItem(this._scrollViewMenuSection);
-            this.addChannels();
-
-            //If there is no previously played channel, pick the first one on the list (if any)
-            if (this._activeChannel === null && this.channelBoxList !== null && this.channelBoxList.length > 0)
-                this._activeChannel = this.channelBoxList[0];
+            this.addChannels().then(() => {
+                //If there is no previously played channel, pick the first one on the list (if any)
+                if (this._activeChannel === null && this.channelBoxList !== null && this.channelBoxList.length > 0)
+                    this._activeChannel = this.channelBoxList[0];
+            });
 
 
             //Channels Section END
@@ -212,7 +212,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             this._search_event_handler = this._settings.connect("changed::" + Constants.SCHEMA_GNOME_SEARCH, () => {
                 let bSearch = panelBlasterPanel._settings.get_boolean(Constants.SCHEMA_GNOME_SEARCH);
-                console.error("GNOME SEARCH:" + bSearch);
+                console.debug("GNOME SEARCH:" + bSearch);
                 if (bSearch) {
                     if (this._provider !== null) {
                         Main.overview.searchController.removeProvider(this._provider);
@@ -229,11 +229,13 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             this.stateReady();
             this.setTrayIconStopped();
         }
-        addChannels() {
+        async addChannels() {
             let channelsReadWrite = new Channels.ChannelsReadWrite(panelBlasterPanel._path);
-            let channels = channelsReadWrite.getChannels();
+            let channels = await channelsReadWrite.getChannels();
             let lastPlayedId = panelBlasterPanel._settings.get_string(Constants.SCHEMA_LAST_PLAYED);
             this.channelBoxList = [];
+
+            if (channels === null) return;
 
             for (let i = 0; i < channels.length; ++i) {
                 let channelData = channels[i];
@@ -335,20 +337,20 @@ export const PanelBlasterMenuButton = GObject.registerClass(
                 return;
             }
             if (activeChannel === null) {
-                console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel not found]`);
+                console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel not found]`);
             }
             else {
                 if (channel._channelInfo.getId() === activeChannel._channelInfo.getId()) {
                     //Probably just 1 channel in the list. Don't switch.
-                    console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[ID is the same ${activeChannel._channelInfo.getId()}]`);
+                    console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[ID is the same ${activeChannel._channelInfo.getId()}]`);
                     return;
                 }
                 else {
                     //More than 1 channels, everything is fine.
-                    console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel: ${activeChannel._channelInfo.getName()}]`);
+                    console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel: ${activeChannel._channelInfo.getName()}]`);
                 }
             }
-            console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Switching to: ${channel._channelInfo.getName()}]`);
+            console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Switching to: ${channel._channelInfo.getName()}]`);
             panelBlasterPanel.onChannelChanged(channel);
         }
         onShortChannelJsonSuccess(channelBox, jsonData) {

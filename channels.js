@@ -2,6 +2,8 @@ import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import * as Constants from "./constants.js";
 
+Gio._promisify(Gio.File.prototype, "load_contents_async", "load_contents_finish");
+
 export const ChannelInfo = class ChannelInfo {
   constructor(id, name, uri, order, useYtdlp, islive) {
     this.id = id;
@@ -26,18 +28,18 @@ export const ChannelsReadWrite = class ChannelsReadWrite {
     this.configFolder = GLib.get_user_config_dir() + "/" + Constants.CONFIG_FOLDER_NAME;
     this.channelsFilePath = this.configFolder + "/" + Constants.SETTINGS_FILE_NAME;
   }
-  
-  getChannels() {
+
+  async getChannels() {
     this.ensureChannelsFile();
     return this.readChannelsFile();
   }
 
-  readChannelsFile() {
+  async readChannelsFile() {
     const file = Gio.File.new_for_path(this.channelsFilePath);
     let contents;
     try {
-      [, contents] = file.load_contents(null);      
-    } catch (e) {        
+      [contents] = await file.load_contents_async(null);
+    } catch (e) {
       console.warn(`${Constants.LOG_PREFIX_CHANNELS} ${Constants.LOG_FAILED_TO_LOAD_JSON}: [${e}]`);
       return null;
     }
@@ -45,7 +47,7 @@ export const ChannelsReadWrite = class ChannelsReadWrite {
     const channelsString = decoder.decode(contents);
 
     let channelsData = null;
-    try { channelsData = JSON.parse(channelsString); } 
+    try { channelsData = JSON.parse(channelsString); }
     catch (e) { console.warn(`${Constants.LOG_PREFIX_CHANNELS} ${Constants.LOG_FAILED_TO_PARSE_JSON}:[${e}]`); }
     return channelsData;
   }
@@ -56,7 +58,7 @@ export const ChannelsReadWrite = class ChannelsReadWrite {
       const encoder = new TextEncoder("utf-8");
       const channelsString = encoder.encode(jsonString);
       file.replace_contents(channelsString, null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-    } 
+    }
     catch (e) { console.warn(`${Constants.LOG_PREFIX_CHANNELS} ${Constants.LOG_FAILED_TO_UPDATE_JSON}:[${e}]`); }
   }
 
@@ -64,8 +66,8 @@ export const ChannelsReadWrite = class ChannelsReadWrite {
     let folder = Gio.file_new_for_path(this.configFolder);
 
     if (!folder.query_exists(null)) {
-      try { folder.make_directory(null); } 
-      catch (error) {         
+      try { folder.make_directory(null); }
+      catch (error) {
         console.error(`${Constants.LOG_PREFIX_CHANNELS} ${Constants.LOG_FAILED_TO_CREATE_CONFIG_FOLDER}:[${error}]`);
         return;
       }
@@ -76,7 +78,7 @@ export const ChannelsReadWrite = class ChannelsReadWrite {
       try {
         let defaultFile = Gio.file_new_for_path(this.extensionPath).get_child(Constants.SETTINGS_FILE_NAME,);
         defaultFile.copy(channelsFile, Gio.FileCopyFlags.NONE, null, null);
-      } catch (e) { console.error(`${Constants.LOG_PREFIX_CHANNELS} ${Constants.LOG_FAILED_TO_CREATE_JSON}:[${e}]`); }      
+      } catch (e) { console.error(`${Constants.LOG_PREFIX_CHANNELS} ${Constants.LOG_FAILED_TO_CREATE_JSON}:[${e}]`); }
     }
   }
 };

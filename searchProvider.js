@@ -54,8 +54,7 @@ export class SearchProvider {
      */
     activateResult(result, terms) {
         console.debug(`activateResult(${result}, [${terms}])`);
-        console.warn(`activateResult(${result}, [${terms}])`);
-        
+
         let channelBox = this._menu.findChannelBox(result);
         if (channelBox !== null) this._menu.onChannelChanged(channelBox);
     }
@@ -74,7 +73,6 @@ export class SearchProvider {
      */
     launchSearch(terms) {
         console.debug(`launchSearch([${terms}])`);
-        console.warn(`launchSearch([${terms}])`);
     }
 
     /**
@@ -90,7 +88,6 @@ export class SearchProvider {
      */
     createResultObject(meta) {
         console.debug(`createResultObject(${meta.id})`);
-        console.warn(`createResultObject(${meta.id})`);
 
         return null;
     }
@@ -107,44 +104,40 @@ export class SearchProvider {
      * @param {Gio.Cancellable} cancellable - A cancellable for the operation
      * @returns {Promise<ResultMeta[]>} A list of result metadata objects
      */
-    getResultMetas(results, cancellable) {
+    async getResultMetas(results, cancellable) {
         console.debug(`getResultMetas([${results}])`);
-        console.warn(`getResultMetas([${results}])`);
         const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
 
-        return new Promise((resolve, reject) => {
-            const cancelledId = cancellable.connect(() => reject(Error('Operation Cancelled')));
-            const resultMetas = [];
+        const resultMetas = [];
+        let channelsReadWrite = new Channels.ChannelsReadWrite(this._extension.path);
+        let channels = await channelsReadWrite.getChannels();
+        if (cancellable.is_cancelled()) throw Error('Operation Cancelled');
+        if (channels === null) return resultMetas;
 
-            let channelsReadWrite = new Channels.ChannelsReadWrite(this._extension.path);            
-            let channels = channelsReadWrite.getChannels();
-            for (let i = 0; i < results.length; ++i) {                
-                for (let j = 0; j < channels.length; ++j) {
-                    let channelData = channels[j];                                        
-                    if (results[i] !== channelData.id) continue;
+        for (let i = 0; i < results.length; ++i) {
+            for (let j = 0; j < channels.length; ++j) {
+                let channelData = channels[j];
+                if (results[i] !== channelData.id) continue;
 
-                    let decodedUri = Utils.processSpecialCharacters(channelData.uri, false);
-                    let decodedName = Utils.processSpecialCharacters(channelData.name, false);  
-                                      
-                    const meta = {
-                        id: channelData.id,
-                        name: decodedName,
-                        description: decodedUri,
-                        clipboardText: decodedUri,
-                        createIcon: size => { 
-                            return this.getChannelThumbnail(scaleFactor, size, channelData.id); 
-                        },
-                    };
-                    resultMetas.push(meta);              
-                }
+                let decodedUri = Utils.processSpecialCharacters(channelData.uri, false);
+                let decodedName = Utils.processSpecialCharacters(channelData.name, false);
+
+                const meta = {
+                    id: channelData.id,
+                    name: decodedName,
+                    description: decodedUri,
+                    clipboardText: decodedUri,
+                    createIcon: size => {
+                        return this.getChannelThumbnail(scaleFactor, size, channelData.id);
+                    },
+                };
+                resultMetas.push(meta);
             }
+        }
 
-            cancellable.disconnect(cancelledId);
-            if (!cancellable.is_cancelled())
-                resolve(resultMetas);
-        });
+        return resultMetas;
     }
-    getChannelThumbnail(scaleFactor, size, id) {  
+    getChannelThumbnail(scaleFactor, size, id) {
         let thumbNailPath = Utils.getConfigPath() + "/" + id;
         let thumbNailIcon = Gio.icon_new_for_string(thumbNailPath);
 
@@ -168,7 +161,7 @@ export class SearchProvider {
                 scaledWidth = size;
                 scaledHeight = trueHeight / (trueWidth / size);
             }
-        }        
+        }
         let thumbnail = new St.Icon({
             width: scaledWidth * scaleFactor,
             height: scaledHeight * scaleFactor,
@@ -178,7 +171,7 @@ export class SearchProvider {
         thumbnail.set_pivot_point(0.5, 0.5);
         if (fileExists) thumbnail.gicon = thumbNailIcon;
         else thumbnail.set_icon_name(Constants.ICON_CHANNEL_THUMB_PLACEHOLDER);
-        return thumbnail; 
+        return thumbnail;
     }
     /**
      * Initiate a new search.
@@ -193,25 +186,22 @@ export class SearchProvider {
      * @param {Gio.Cancellable} cancellable - A cancellable for the operation
      * @returns {Promise<string[]>} A list of result identifiers
      */
-    getInitialResultSet(terms, cancellable) {
+async getInitialResultSet(terms, cancellable) {
         console.debug(`getInitialResultSet([${terms}])`);
-        console.warn(`getInitialResultSet([${terms}])`);
-        return new Promise((resolve, reject) => {
-            const cancelledId = cancellable.connect(() => reject(Error('Search Cancelled')));
-            let search = terms.join(" ").toLowerCase();
+        let search = terms.join(" ").toLowerCase();
 
-            let identifiers = [];
-            let channelsReadWrite = new Channels.ChannelsReadWrite(this._extension.path);            
-            let channels = channelsReadWrite.getChannels();
+        let identifiers = [];
+        let channelsReadWrite = new Channels.ChannelsReadWrite(this._extension.path);
+        let channels = await channelsReadWrite.getChannels();
+        if (cancellable.is_cancelled()) throw Error('Search Cancelled');
+        if (channels === null) return identifiers;
 
-            for (let i = 0; i < channels.length; ++i) {
-                let channelData = channels[i];
-                if (channelData.name.toLowerCase().includes(search)) identifiers.push(channelData.id);                
-            }
+        for (let i = 0; i < channels.length; ++i) {
+            let channelData = channels[i];
+            if (channelData.name.toLowerCase().includes(search)) identifiers.push(channelData.id);
+        }
 
-            cancellable.disconnect(cancelledId);
-            if (!cancellable.is_cancelled()) resolve(identifiers);
-        });       
+        return identifiers;
     }
 
     /**
@@ -234,10 +224,9 @@ export class SearchProvider {
      */
     getSubsearchResultSet(results, terms, cancellable) {
         console.debug(`getSubsearchResultSet([${results}], [${terms}])`);
-        console.warn(`getSubsearchResultSet([${results}], [${terms}])`);
         if (cancellable.is_cancelled())
             throw Error('Search Cancelled');
-        
+
         return this.getInitialResultSet(terms, cancellable);
     }
 
@@ -254,7 +243,7 @@ export class SearchProvider {
      * @returns {string[]} The filtered results
      */
     filterResults(results, maxResults) {
-        console.debug(`filterResults([${results}], ${maxResults})`);        
+        console.debug(`filterResults([${results}], ${maxResults})`);
         if (results.length <= maxResults)
             return results;
 

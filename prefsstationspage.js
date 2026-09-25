@@ -18,7 +18,7 @@ export const StationsPageHandler = class StationsPageHandler {
         this._stationsPage = null;
         this._rows = null;
     }
-    createPage() {
+    async createPage() {
         this._stationsPage = new Adw.PreferencesPage();
         this._stationsPage.title = _("Stations");
         this._stationsPage.description = _("Add, edit and delete radio stations and channels.");
@@ -39,13 +39,14 @@ export const StationsPageHandler = class StationsPageHandler {
         row.add_suffix(addNewButton);
         this._channelGroup.add(row);
 
-        this.populateChannels(this._channelGroup);
+        await this.populateChannels(this._channelGroup);
         this._stationsPage.add(this._channelGroup);
     }
 
-    populateChannels() {
+    async populateChannels() {
         this._channelsReadWrite = new Channels.ChannelsReadWrite(this.path);
-        this._channels = this._channelsReadWrite.getChannels();
+        this._channels = await this._channelsReadWrite.getChannels();
+        if (this._channels === null) this._channels = [];
         this._channels.sort((a, b) => parseInt(a.order) - parseInt(b.order));
 
         for (let index = 0; index < this._channels.length; ++index) {

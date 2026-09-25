@@ -3,6 +3,8 @@ version: '3'
 vars:
   UUID: panelblaster@dasjott.de
   SCHEMA: schemas/org.gnome.shell.extensions.panelblaster.gschema.xml
+  BUNDLE: '{{.UUID}}.shell-extension.zip'
+  VENV: .venv
 
 tasks:
   pack:
@@ -27,3 +29,20 @@ tasks:
           --extra-source=images \
           $extra \
           .
+
+  lint:
+    desc: Validate the packed bundle with shexli, catching review issues early
+    deps: [pack, _shexli-venv]
+    cmds:
+      - '{{.VENV}}/bin/shexli {{.BUNDLE}}'
+
+  _shexli-venv:
+    internal: true
+    desc: Provision a local virtualenv with shexli (the EGO upload linter)
+    cmds:
+      - python3 -m venv {{.VENV}}
+      # Pin tree-sitter <0.26: shexli's 0.25 JS grammar ABI-crashes on core 0.26.
+      - '{{.VENV}}/bin/pip install -U -q shexli "tree-sitter<0.26"'
+    # Skip reprovisioning once shexli is already installed in the venv.
+    status:
+      - test -x {{.VENV}}/bin/shexli

@@ -100,9 +100,9 @@ export const SearchRadioPageHandler = class ChannelInfo {
                             for (let i = 0; i < jsonResponse.length; i++) {
                                 this.addSearchRow(jsonResponse[i]);
                             }
-                        } else { console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_JSON_EMPTY}`); }
+                        } else { console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_JSON_EMPTY}`); }
                     } catch (e) {
-                        console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                        console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
                         this.retrySearch();
                     }
                 }
@@ -134,11 +134,11 @@ export const SearchRadioPageHandler = class ChannelInfo {
                             this.server = src.lookup_by_address_finish(addrResult);
                             if (onReady) onReady();
                         } catch (e) {
-                            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                            console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
                         }
                     });
                 } catch (e) {
-                    console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                    console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
                 }
             });
     }
@@ -174,7 +174,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
             act.add_suffix(addButton);
             this.loadThumbnail(act, apiStation);
             this.searchResults.add(act);
-        } catch (e) { console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_ADD_SEARCH_ROW} [${e}]`); }
+        } catch (e) { console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_ADD_SEARCH_ROW} [${e}]`); }
 
 
     }
@@ -194,12 +194,12 @@ export const SearchRadioPageHandler = class ChannelInfo {
                         const [bytes] = source.load_bytes_finish(result);
                         thumbNail.set_from_paintable(Gdk.Texture.new_from_bytes(bytes));
                     } catch (error) {
-                        console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${favicon}] [${error}]`);
+                        console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${favicon}] [${error}]`);
                     }
                 });
             }
         } catch (error) {
-            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${error}]`);
+            console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${error}]`);
         }
 
     }
@@ -214,7 +214,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
             });
         }
         catch (error) {
-            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_SAVE_THUMBNAIL}: [${favicon}] [${error}]`);
+            console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_SAVE_THUMBNAIL}: [${favicon}] [${error}]`);
         }
     }
 

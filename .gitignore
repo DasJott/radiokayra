@@ -4,3 +4,6 @@
 *.shell-extension.zip
 schemas/gschemas.compiled
 *.mo
+
+# shexli linter virtualenv (`task lint`)
+.venv/
