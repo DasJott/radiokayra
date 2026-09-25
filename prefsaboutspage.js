@@ -5,10 +5,10 @@ import * as Constants from "./constants.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const AboutPageHandler = class AboutPageHandler {
-    constructor(kayraPrefs) {
-        this._kayraPrefs = kayraPrefs;
-        this._window = kayraPrefs._window;
-        this._schema = this._kayraPrefs.getSettings();
+    constructor(panelBlasterPrefs) {
+        this._panelBlasterPrefs = panelBlasterPrefs;
+        this._window = panelBlasterPrefs._window;
+        this._schema = this._panelBlasterPrefs.getSettings();
     }
     clear() {
         this._settingGroup = null;
@@ -22,7 +22,7 @@ export const AboutPageHandler = class AboutPageHandler {
 
         this._window.add(this._aboutPage);
         this._rows = [];
-        let title_text = 'Radio Kayra v2.1\n';
+        let title_text = 'PanelBlaster v2.2\n';
         title_text += _('A foss hobby project by Ayhan Avcı (2024-2025)');
 
         this.about = new Adw.PreferencesGroup({ title: title_text, description: _("Mid clicking the radio icon toggles play / stop.\nDon't forget to install yt-dlp &amp; gstreamer. Links at the bottom. Enjoy!")});
@@ -34,9 +34,9 @@ export const AboutPageHandler = class AboutPageHandler {
         row.title = _("Project");
         let newLink = new Gtk.LinkButton({
           valign: Gtk.Align.CENTER,
-          label: "https://github.com/ayhanavci/radiokayra",
+          label: "https://github.com/dasjott/radiokayra",
           focusable: 1,
-          uri: "https://github.com/ayhanavci/radiokayra"
+          uri: "https://github.com/dasjott/radiokayra"
         });
         row.add_suffix(newLink);
         this._urlsGroup.add(row);

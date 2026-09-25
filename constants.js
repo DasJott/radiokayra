@@ -15,7 +15,7 @@ export const MAX_RADIO_SEARCH_RESULTS = 30;
 export const MAX_RADIO_SEARCH_RETRIES = 3;
 
 export const SETTINGS_FILE_NAME = "channels.json";
-export const CONFIG_FOLDER_NAME = "radio-kayra";
+export const CONFIG_FOLDER_NAME = "panelblaster";
 export const RADIO_SEARCH_SERVER_URL = 'all.api.radio-browser.info';
 export const VOLUME_POWER = 2;
 
@@ -30,7 +30,7 @@ export const SCHEMA_GNOME_SEARCH = "gnomesearch";
 
 export const CSS_SETTINGS_POPUP = "settings-menu-item";
 export const CSS_CHANNEL_LIST_THUMBNAIL = "channel-list-item";
-export const CSS_LOADING_LAYOUT = "radiokayra-popup-loading-box";
+export const CSS_LOADING_LAYOUT = "panelblaster-popup-loading-box";
 export const CSS_ICON_PLAY_BUTTON = "play-button-icon";
 export const CSS_CHANNEL_NAME_LABEL = "channel-name-label";
 

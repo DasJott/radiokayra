@@ -17,7 +17,7 @@ export const StreamInfoPopup = GObject.registerClass(
         GTypeName: "StreamInfoPopup",
     },
     class extends PopupMenu.PopupBaseMenuItem {
-        constructor(player, extensionPath, shellVersion) {
+        constructor(player, extensionPath, settings, shellVersion) {
             super({
                 hover: false,
                 activate: false,
@@ -29,6 +29,7 @@ export const StreamInfoPopup = GObject.registerClass(
             this.hide();
             this._player = player;
             this._extensionPath = extensionPath;
+            this._settings = settings;
 
             this._streamLayout = new St.BoxLayout({
                 x_align: Clutter.ActorAlign.CENTER,
@@ -41,6 +42,9 @@ export const StreamInfoPopup = GObject.registerClass(
 
 
             this.add_child(this._streamLayout);
+
+            // Copy the current song to the clipboard when the now playing area is clicked.
+            this._copySongHandler = this.connect('button-press-event', () => this.copySongToClipboard());
 
             //Loading info
             this._loadingSpinner = new Animation.Spinner(16);
@@ -127,7 +131,6 @@ export const StreamInfoPopup = GObject.registerClass(
         clear() {
             this._streamLayout?.destroy();
             this._streamLayout = null;
-
             this._onair?.destroy();
             this._onair = null;
 
@@ -148,6 +151,16 @@ export const StreamInfoPopup = GObject.registerClass(
 
             this._loadingSpinner?.destroy();
             this._loadingSpinner = null;
+        }
+        copySongToClipboard() {
+            if (!this._settings || !this._settings.get_boolean(Constants.SCHEMA_RIGHTCLICK_COPYSONG))
+                return Clutter.EVENT_PROPAGATE;
+            let song = this._artist;
+            if (!Utils.isEmptyString(song)) song += " ";
+            song += this._title;
+            if (!Utils.isEmptyString(song))
+                St.Clipboard.get_default().set_text(St.ClipboardType.CLIPBOARD, song);
+            return Clutter.EVENT_STOP;
         }
         statePlaying(channelBox) {
             this._onair.show();

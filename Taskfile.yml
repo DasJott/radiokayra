@@ -1,0 +1,29 @@
+version: '3'
+
+vars:
+  UUID: panelblaster@dasjott.de
+  SCHEMA: schemas/org.gnome.shell.extensions.panelblaster.gschema.xml
+
+tasks:
+  pack:
+    desc: Build the GNOME Shell extension bundle ({{.UUID}}.shell-extension.zip)
+    cmds:
+      # Compile the schema so the extension can also be run from the source tree;
+      # the packed bundle only ships the .xml, which GNOME compiles on install.
+      - glib-compile-schemas schemas/
+      # gnome-extensions pack only auto-includes metadata.json, extension.js,
+      # prefs.js and stylesheet.css; every other module and asset must be listed.
+      - |
+        extra=""
+        for f in *.js channels.json; do
+          case "$f" in
+            extension.js|prefs.js) continue ;;
+          esac
+          extra="$extra --extra-source=$f"
+        done
+        gnome-extensions pack --force \
+          --podir=po \
+          --schema="{{.SCHEMA}}" \
+          --extra-source=images \
+          $extra \
+          .

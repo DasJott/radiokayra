@@ -15,7 +15,7 @@ import * as PopStreamInfo from "./popstreaminfo.js";
 import * as PopVolumeControl from "./popvolumecontrol.js";
 import * as Channels from "./channels.js";
 import * as Constants from "./constants.js";
-import * as PanelBlaster from "./radiokayra.js";
+import * as PanelBlaster from "./panelblaster.js";
 import * as PanelBlasterSearchProvider from "./searchProvider.js";
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -24,7 +24,7 @@ let panelBlasterPanel;
 
 export const PanelBlasterMenuButton = GObject.registerClass(
     {
-        GTypeName: "RadiokayraMenuButton",
+        GTypeName: "PanelBlasterMenuButton",
     },
     class PanelBlasterMenuButton extends PanelMenu.Button {
         destroy() {
@@ -95,7 +95,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
         }
 
         _init(extension) {
-            super._init(0.0, "RadiokayraMenuButton");
+            super._init(0.0, "PanelBlasterMenuButton");
             panelBlasterPanel = this;
             this._shellVersion = this.getShellversion();
             //console.log("SHELL VERSION:" + this._shellVersion);

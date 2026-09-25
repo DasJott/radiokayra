@@ -15,7 +15,7 @@ export const RadioPlayer = class RadioPlayer {
   isSourceReady() { return this.source !== null; }
   initPipeLine() {
     Gst.init(null);
-    this.pipeline = new Gst.Pipeline({ name: "Radio Kayra Stream" });
+    this.pipeline = new Gst.Pipeline({ name: "PanelBlaster Stream" });
     this.playing = false;
     this.initialized = true;
   }

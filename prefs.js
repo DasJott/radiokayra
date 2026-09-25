@@ -11,26 +11,26 @@ import * as Constants from "./constants.js";
 import { ExtensionPreferences, gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 //glib-compile-schemas schemas/
-export default class RadioKayraPreferences extends ExtensionPreferences {
+export default class PanelBlasterPreferences extends ExtensionPreferences {
   constructor(metadata) {
     super(metadata);
-    console.info(`constructing ${this.metadata.name}`);    
+    console.info(`constructing ${this.metadata.name}`);
   }
   fillPreferencesWindow(window) {
-    this._window = window;        
-    this._channelsChanged = false;        
-    
+    this._window = window;
+    this._channelsChanged = false;
+
     //Stations
     this._stationsPageHandler = new StationsPageHandler.StationsPageHandler(this);
     this._stationsPageHandler.createPage();
-    
+
     //Youtube Search
     this._searchYoutubePageHandler = new SearchYoutubePageHandler.SearchYoutubePageHandler(this);
     this._searchYoutubePageHandler.createPage();
-    
+
     //Radio Search
     this._searchRadioPageHandler = new SearchRadioPageHandler.SearchRadioPageHandler(this);
-    this._searchRadioPageHandler.createPage();    
+    this._searchRadioPageHandler.createPage();
 
     //Settings
     this._settingsPageHandler = new SettingsPageHandler.SettingsPageHandler(this);
@@ -40,12 +40,12 @@ export default class RadioKayraPreferences extends ExtensionPreferences {
     this._aboutPageHandler = new AboutPageHandler.AboutPageHandler(this);
     this._aboutPageHandler.createPage();
 
-    window.connect("close-request", () => {      
+    window.connect("close-request", () => {
       if (this._channelsChanged) {
         let val = Utils.uuidv4();
-        this.getSettings().set_string(Constants.SCHEMA_CHANNELS_CHANGE_EVENT, Utils.uuidv4(val));  
-      } 
-       
+        this.getSettings().set_string(Constants.SCHEMA_CHANNELS_CHANGE_EVENT, Utils.uuidv4(val));
+      }
+
       this._searchRadioPageHandler.clear();
       this._searchYoutubePageHandler.clear();
       this._stationsPageHandler.clear();
@@ -56,7 +56,7 @@ export default class RadioKayraPreferences extends ExtensionPreferences {
       this._stationsPageHandler = null;
       this._settingsPageHandler = null;
     });
-  }      
+  }
 }
 //Code blob to make gio subprocesses work. Recommended in gnome matrix chat.
 /* Gio.Subprocess */

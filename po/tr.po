@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-07 14:09+0300\n"
+"POT-Creation-Date: 2026-09-25 12:53+0200\n"
 "PO-Revision-Date: 2025-03-07 14:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
 
-#: kayramenu.js:147 prefssettingsspage.js:22
+#: panelblastermenu.js:164 prefssettingsspage.js:22
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: popstreaminfo.js:175
+#: popstreaminfo.js:188
 msgid "Loading..."
 msgstr "Yüklüyor..."
 
-#: popstreaminfo.js:185
+#: popstreaminfo.js:198
 msgid "Ready..."
 msgstr "Hazır..."
 
@@ -35,38 +35,39 @@ msgid "About"
 msgstr "Hakkında"
 
 #: prefsaboutspage.js:26
-msgid ""
-"Radio Kayra v2.0\n"
-"A foss hobby project by Ayhan Avcı (2024-2025)"
+#, fuzzy
+msgid "A foss hobby project by Ayhan Avcı (2024-2025)"
 msgstr ""
-"Radio Kayra v2.0\n"
+"PanelBlaster v2.0\n"
 "Bir açık kaynak hobi projesi. Ayhan Avcı (2024-2025)"
 
-#: prefsaboutspage.js:26
+#: prefsaboutspage.js:28
 msgid ""
 "Mid clicking the radio icon toggles play / stop.\n"
 "Don't forget to install yt-dlp &amp; gstreamer. Links at the bottom. Enjoy!"
 msgstr ""
 "İkona orta fare ile tıklamak müziği başlatır veya durdurur\n"
-"yt-dlp &amp; gstreamer kurulumlarını yapmayı unutmayın. Bağlantılar altta. İyi eğlenceler!"
+"yt-dlp &amp; gstreamer kurulumlarını yapmayı unutmayın. Bağlantılar altta. "
+"İyi eğlenceler!"
 
-#: prefsaboutspage.js:29
+#: prefsaboutspage.js:31
 msgid "Links"
 msgstr "Bağlantılar"
 
-#: prefsaboutspage.js:32
+#: prefsaboutspage.js:34
 msgid "Project"
 msgstr "Proje"
 
-#: prefsaboutspage.js:43
+#: prefsaboutspage.js:45
 msgid "Extension"
 msgstr "Eklenti"
 
-#: prefsaboutspage.js:54
-msgid "Yt-dlp"
+#: prefsaboutspage.js:56
+#, fuzzy
+msgid "yt-dlp"
 msgstr "yt-dlp kullan?  "
 
-#: prefsaboutspage.js:65
+#: prefsaboutspage.js:67
 msgid "GStreamer"
 msgstr "GStreamer"
 
@@ -87,23 +88,23 @@ msgstr "Kanal Adı"
 msgid "Search Results"
 msgstr "Arama Sonuçları"
 
-#: prefssearchradio.js:127
+#: prefssearchradio.js:158
 msgid "Country: "
 msgstr "Ülke: "
 
-#: prefssearchradio.js:128
+#: prefssearchradio.js:159
 msgid "Tags: "
 msgstr "Etiketler: "
 
-#: prefssearchradio.js:129 prefssearchyoutube.js:93
+#: prefssearchradio.js:160 prefssearchyoutube.js:93
 msgid "Link: "
 msgstr "Bağlantı: "
 
-#: prefssearchradio.js:130
+#: prefssearchradio.js:161
 msgid "Codec: "
 msgstr "Kodek: "
 
-#: prefssearchradio.js:131
+#: prefssearchradio.js:162
 msgid "Bitrate: "
 msgstr "Bitrate: "
 
@@ -144,11 +145,14 @@ msgid "Opens the settings(this) window when you right click on the radio icon."
 msgstr "Radyo ikonuna sağ tıkladığında ayarları açar."
 
 #: prefssettingsspage.js:51
-msgid "Right click - Copy Song"
-msgstr "Sağ tık - Şarkıyı kopyala"
+msgid "Copy Song on Click"
+msgstr ""
 
 #: prefssettingsspage.js:52
-msgid "Copies the song title to clipboard when you right click on the radio icon."
+#, fuzzy
+msgid ""
+"Copies the artist and song title to clipboard when you click the now playing "
+"area."
 msgstr "Radyo ikonuna sağ tıkladığında şarkı adını kopyalar."
 
 #: prefssettingsspage.js:59
@@ -167,46 +171,52 @@ msgstr "Gnome Arama Desteği"
 msgid "Search and play your stations using Gnome search."
 msgstr "Gnome aramasında kanallarınız da görünür."
 
-#: prefsstationspage.js:24
+#: prefsstationspage.js:23
 msgid "Stations"
 msgstr "İstasyonlar"
 
-#: prefsstationspage.js:25
-msgid "Add / Edit and Delete radio stations."
+#: prefsstationspage.js:24
+#, fuzzy
+msgid "Add, edit and delete radio stations and channels."
 msgstr "İstasyon Ekle / Düzenle ve Sil."
 
-#: prefsstationspage.js:33
-msgid "Radio Channels"
+#: prefsstationspage.js:32
+#, fuzzy
+msgid "Stations and Channels"
 msgstr "Radyo Kanalları"
 
-#: prefsstationspage.js:178
+#: prefsstationspage.js:218
 msgid "Add a New Channel"
 msgstr "Yeni Kanal"
 
-#: prefsstationspage.js:178
+#: prefsstationspage.js:218
 msgid "Edit Channel"
 msgstr "Kanalı Düzenle"
 
-#: prefsstationspage.js:196
+#: prefsstationspage.js:236
 msgid "Channel URL:"
 msgstr "Kanal bağlantısı:"
 
-#: prefsstationspage.js:220
+#: prefsstationspage.js:260
 msgid "Channel Name:"
 msgstr "Kanal Adı:"
 
-#: prefsstationspage.js:230
+#: prefsstationspage.js:270
 msgid "Fetch from url"
 msgstr "Bağlantıdan çek"
 
-#: prefsstationspage.js:252
-msgid "Use yt-dlp?"
+#: prefsstationspage.js:292
+#, fuzzy
+msgid "Use yt-dlp"
 msgstr "yt-dlp kullan?"
 
-#: prefsstationspage.js:255
+#: prefsstationspage.js:295
 msgid "Add"
 msgstr "Ekle"
 
-#: prefsstationspage.js:255
+#: prefsstationspage.js:295
 msgid "Update"
 msgstr "Güncelle"
+
+#~ msgid "Right click - Copy Song"
+#~ msgstr "Sağ tık - Şarkıyı kopyala"

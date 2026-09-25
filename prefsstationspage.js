@@ -9,9 +9,9 @@ import * as Constants from "./constants.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const StationsPageHandler = class StationsPageHandler {
-    constructor(kayraPrefs) {
-        this._kayraPrefs = kayraPrefs;
-        this._window = kayraPrefs._window;
+    constructor(panelBlasterPrefs) {
+        this._panelBlasterPrefs = panelBlasterPrefs;
+        this._window = panelBlasterPrefs._window;
     }
     clear() {
         this._channelGroup = null;
@@ -131,7 +131,7 @@ export const StationsPageHandler = class StationsPageHandler {
         }
     }
     writeChannels() {
-        this._kayraPrefs._channelsChanged = true;
+        this._panelBlasterPrefs._channelsChanged = true;
         this._channels.sort((a, b) => parseInt(a.order) - parseInt(b.order));
         for (let index = 0; index < this._channels.length; ++index) this._channels[index].order = index;
 

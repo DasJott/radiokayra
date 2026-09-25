@@ -1,24 +1,24 @@
 import { Extension, gettext as _, } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import Gio from "gi://Gio";
-import * as KayraMenu from "./kayramenu.js";
+import * as PanelBlasterMenu from "./panelblastermenu.js";
 
-export default class RadioKayraExtension extends Extension {
+export default class PanelBlasterExtension extends Extension {
   constructor(metadata) {
     super(metadata);
     //console.info(`constructing ${this.metadata.name}`);
   }
-  
-  enable() {                 
-    this.menuButton = new KayraMenu.RadiokayraMenuButton(this);        
-    this._provider = null;    
-    Main.panel.addToStatusArea(this.uuid, this.menuButton);    
+
+  enable() {
+    this.menuButton = new PanelBlasterMenu.PanelBlasterMenuButton(this);
+    this._provider = null;
+    Main.panel.addToStatusArea(this.uuid, this.menuButton);
   }
 
-  disable() {          
+  disable() {
     this.menuButton?.destroy();
     this.menuButton = null;
-  }    
+  }
 }
 
 //Code blob to make gio subprocesses work. Recommended in gnome matrix chat.

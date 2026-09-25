@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the PanelBlaster package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: PanelBlaster\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 10:43+0200\n"
+"POT-Creation-Date: 2026-09-25 12:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: kayramenu.js:148 prefssettingsspage.js:22
+#: panelblastermenu.js:164 prefssettingsspage.js:22
 msgid "Settings"
 msgstr ""
 
-#: popstreaminfo.js:175
+#: popstreaminfo.js:188
 msgid "Loading..."
 msgstr ""
 
-#: popstreaminfo.js:185
+#: popstreaminfo.js:198
 msgid "Ready..."
 msgstr ""
 
@@ -80,23 +80,23 @@ msgstr ""
 msgid "Search Results"
 msgstr ""
 
-#: prefssearchradio.js:129
+#: prefssearchradio.js:158
 msgid "Country: "
 msgstr ""
 
-#: prefssearchradio.js:130
+#: prefssearchradio.js:159
 msgid "Tags: "
 msgstr ""
 
-#: prefssearchradio.js:131 prefssearchyoutube.js:93
+#: prefssearchradio.js:160 prefssearchyoutube.js:93
 msgid "Link: "
 msgstr ""
 
-#: prefssearchradio.js:132
+#: prefssearchradio.js:161
 msgid "Codec: "
 msgstr ""
 
-#: prefssearchradio.js:133
+#: prefssearchradio.js:162
 msgid "Bitrate: "
 msgstr ""
 
@@ -137,12 +137,13 @@ msgid "Opens the settings(this) window when you right click on the radio icon."
 msgstr ""
 
 #: prefssettingsspage.js:51
-msgid "Right click - Copy Song"
+msgid "Copy Song on Click"
 msgstr ""
 
 #: prefssettingsspage.js:52
 msgid ""
-"Copies the song title to clipboard when you right click on the radio icon."
+"Copies the artist and song title to clipboard when you click the now playing "
+"area."
 msgstr ""
 
 #: prefssettingsspage.js:59

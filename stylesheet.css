@@ -24,8 +24,8 @@ main-menu-section StButton.ci-pin-btn {
     padding-left: 2px;
 }
 
-.channel-name-label {    
-    padding: 4px 12px;    
+.channel-name-label {
+    padding: 4px 12px;
     text-align: center;
 }
 .adw-action-row.row {
@@ -39,7 +39,7 @@ main-menu-section StButton.ci-pin-btn {
 .settings-menu-item {
 }
 
-.radiokayra-popup-loading-box {
+.panelblaster-popup-loading-box {
 
 }
 
@@ -51,7 +51,7 @@ main-menu-section StButton.ci-pin-btn {
 
 .layout-box {
     min-width: 20em;
-    max-width: 20em;    
+    max-width: 20em;
 }
 
 .play-button-icon {
@@ -64,5 +64,5 @@ main-menu-section StButton.ci-pin-btn {
     padding: 4px 12px;
     background-color: rgba(24,24,24,0.8);
     text-align: center;
-    color: white;    
+    color: white;
 }

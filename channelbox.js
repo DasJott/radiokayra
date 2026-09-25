@@ -11,13 +11,13 @@ import { gettext as _, } from "resource:///org/gnome/shell/extensions/extension.
 
 export const ChannelBox = GObject.registerClass(
     class ChannelBox extends PopupMenu.PopupBaseMenuItem {
-        constructor(channelInfo, radiokayraPanel) {
+        constructor(channelInfo, panelBlasterPanel) {
             super({
                 reactive: true,
                 can_focus: true,
             });
             this._channelInfo = channelInfo;
-            this._radiokayraPanel = radiokayraPanel;
+            this._panelBlasterPanel = panelBlasterPanel;
             this._is_live = false;
             this._duration = 0;
             this._resolvedUrl = "";
@@ -97,7 +97,7 @@ export const ChannelBox = GObject.registerClass(
         }
 
         activate() {
-            this._radiokayraPanel.onChannelChanged(this);
+            this._panelBlasterPanel.onChannelChanged(this);
         }
     },
 );

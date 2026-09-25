@@ -9,11 +9,11 @@ import * as Constants from "./constants.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const SearchRadioPageHandler = class ChannelInfo {
-    constructor(kayraPrefs) {
-        this._kayraPrefs = kayraPrefs;
-        this._window = kayraPrefs._window;
+    constructor(panelBlasterPrefs) {
+        this._panelBlasterPrefs = panelBlasterPrefs;
+        this._window = panelBlasterPrefs._window;
         this._httpSession = new Soup.Session({
-            user_agent: "Radio Kayra",
+            user_agent: "PanelBlaster",
             timeout: 10
         });
         this.setServer();
@@ -168,7 +168,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
             });
             addButton.get_style_context().add_class('circular');
             addButton.connect('clicked', () => {
-                this._kayraPrefs.channelsChanged = true;
+                this._panelBlasterPrefs.channelsChanged = true;
                 this.addChannel(apiStation);
             });
             act.add_suffix(addButton);
@@ -226,10 +226,10 @@ export const SearchRadioPageHandler = class ChannelInfo {
 
         //TODO: UPDATE IF ALREADY EXISTS
 
-        if (!this._kayraPrefs._stationsPageHandler.channelExists(encodedUri)) { //new channel, new uri
+        if (!this._panelBlasterPrefs._stationsPageHandler.channelExists(encodedUri)) { //new channel, new uri
             if (channel.favicon && !channel.favicon.endsWith('/'))
                 Utils.saveThumbnail(channel.favicon, Utils.getConfigPath() + "/" + id);
-            this._kayraPrefs._stationsPageHandler.addChannelInfo(id, encodedName, encodedUri, false);
+            this._panelBlasterPrefs._stationsPageHandler.addChannelInfo(id, encodedName, encodedUri, false);
         }
     }
 }

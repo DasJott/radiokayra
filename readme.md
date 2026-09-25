@@ -1,29 +1,31 @@
-* [Introduction](#introduction)
-* [Requirements](#requirements)
-* [Features](#Features)
-    * [v1.0](#v10)
-    * [v2.0](#v20)
-* [Channel Management](#channel-management)
-* [Station Search](#station-search)
-    * [Youtube](#youtube)
-    * [Radio](#radio)
-* [Gnome Shell Search](#gnome-search)
-* [Settings](#settings)
-* [Translations](#translations)
-* [Notes](#notes)
-* [Contact](#contact)
+- [Introduction](#introduction)
+- [Requirements](#requirements)
+- [Features](#features)
+  - [v1.0](#v10)
+  - [v2.0:](#v20)
+  - [v2.1](#v21)
+  - [v2.2](#v22)
+- [Channel Management](#channel-management)
+- [Station Search](#station-search)
+  - [Youtube](#youtube)
+  - [Radio](#radio)
+- [Gnome Search](#gnome-search)
+- [Settings](#settings)
+- [Translations](#translations)
+- [Notes](#notes)
+- [Contact](#contact)
 
 
 # Introduction
 
-Radio Kayra is a free and open source [Gnome](https://www.gnome.org/) desktop extension that plays your favorite music and podcast streams in the background.
+PanelBlaster is a free and open source [Gnome](https://www.gnome.org/) desktop extension that plays your favorite music and podcast streams in the background.
 
 It utilizes [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [GStreamer](https://gstreamer.freedesktop.org/) for url/thumbnail resolving and audio playback respectively.
 
 <img src="./.readme/radiokayra.png" alt="Alt Text" width="40%" height="40%">
 
 # Requirements
-1. [Gnome 46,47 or 48](https://gnome.org/)
+1. [Gnome 46,47, 48, 49, 50 or 51](https://gnome.org/)
 2. [GStreamer](https://gstreamer.freedesktop.org/download/#linux)
 3. [yt-dlp](https://github.com/yt-dlp/yt-dlp/wiki/Installation)
 
@@ -61,13 +63,21 @@ Now you can right click on the icon and just paste it in the youtube search.
 * Fixed a minor [issue](https://github.com/ayhanavci/radiokayra/issues/6) in which station page scroll bar was jumping to top when a station was moved up or down.
 * Gnome 48 added to metadata
 
+## v2.2
+* Added support for Gnome 49, 50 and 51.
+* Radio search is now fully asynchronous, so the interface no longer freezes while results load, and it automatically retries other servers on failure ([issue](https://github.com/ayhanavci/radiokayra/issues/7)).
+* The currently playing artist + song is now copied to the clipboard by clicking the "now playing" area of the dropdown, instead of right clicking the icon. Enable "Copy Song on Click" from settings.
+* Right clicking the radio icon now opens the Settings window when "Right click - Settings" is enabled, and no longer also opens the dropdown.
+* Fixed an error on resume from hibernate/suspend that could leave the extension in a broken state ([issue](https://github.com/ayhanavci/radiokayra/issues/12)).
+* Clearer wording throughout the preferences to distinguish radio stations and (Youtube) channels.
+
 # Channel Management
 
-This window opens if you right click on the radio icon or click "Edit Channels" on the main panel.
+Open the preferences window from the "Settings" item in the dropdown menu, or by right clicking the radio icon (when "Right click - Settings" is enabled in the settings). The "Stations" page lists your saved radio stations and channels.
 <img src="./.readme/channel_management.png" alt="Alt Text" width="100%" height="100%">
-Here you can see your current channels. On each row there are 4 buttons. Delete channel, Edit Channel, Move Channel Up and Move Channel Down. Last two allows you to sort your channels.
+Here you can see your current stations and channels. On each row there are 4 buttons. Delete, Edit, Move Up and Move Down. Last two allows you to sort them.
 
-If you click the + button on top of the list, you can manually add a radio channel.
+If you click the + button on top of the list, you can manually add a station or channel.
 <img src="./.readme/add_edit_channel.png" alt="Alt Text" width="100%" height="100%">
 Here you can paste your own stream url and a name.
 * If the url requires no resolving (a direct url to a stream), then uncheck "Use yt-dlp". Enter a name and click "Add".
@@ -83,7 +93,7 @@ Select "Youtube" tab, type your search phrase and click enter or search button. 
 To add a search result. Just click the + button next to it. This will add the channel name, url and the thumbnail to your stations.
 
 ## Radio
-Select "Radio" tab, type your search phrase and click enter or search button. This will perform a radio search and the results will be retrieved synchronously and then displayed (so it may freeze for 1-2 seconds, unlike youtube search). It returns up to 30 results.
+Select "Radio" tab, type your search phrase and click enter or search button. This will perform a radio search and the results will be retrieved and displayed asynchronously (like the Youtube search), so the interface stays responsive. If a server does not respond, another one is tried automatically. It returns up to 30 results.
 
 <img src="./.readme/radio_search.png" alt="Alt Text" width="100%" height="100%">
 
@@ -96,7 +106,7 @@ You can click radio icon and click any channel to play. But you can also search 
 
 # Settings
 
-Select "Settings" tab. Here you can change the right click and hover behaviour as well as the scroll area height.
+Select "Settings" tab. Here you can toggle the hover tooltip, choose whether right clicking the icon opens this settings window, enable copying the current song to the clipboard by clicking the "now playing" area, change the scroll area height and toggle Gnome shell search support.
 
 <img src="./.readme/settings.png" alt="Alt Text" width="100%" height="100%">
 
@@ -108,7 +118,7 @@ The strings are ready to be translated by using a program such as [PoEdit](https
 
 * Open the file at your extensions folder
 
-    ```.../radiokayra@dokaton.com/po/radiokayra@dokaton.com.pot```
+    ```.../panelblaster@dasjott.de/po/panelblaster@dasjott.de.pot```
 
 * Then you can compile the translations as described in [GJS Guide](https://gjs.guide/extensions/development/translations.html#compiling-translations).
 On your extensions folder:
@@ -119,7 +129,7 @@ On your extensions folder:
 * If you only use radio channels-direct links, the extension should work without installing yt-dlp but features will be lacking.
 * Extension stops all activity on screen lock.
 * If a channel thumbnail is not provided by the host url, then a placeholder icon is used (```audio-x-generic-symbolic```).
-* Thumbnails and channel list json file are saved in your `/.config/radio-kayra` folder and is kept on updates.
+* Thumbnails and channel list json file are saved in your `/.config/panelblaster` folder and is kept on updates.
 * channels.json file only holds the channels. Each node is in the following format:
 
 ```
@@ -135,8 +145,8 @@ On your extensions folder:
     1. Icon names used and various size constants are in ```constants.js```
     2. yt-dlp commands are in ```ytdlphandler.js```
     3. Every sub-panel has a seperate class and file ```popXXX.js```
-    4. GStreamer related code is only inside ```radiokayra.js```
-    5. Search functionalities are in ```searchradio.js```, ```searchyoutube.js``` and gnome search is in ```searchProvider.js```
+    4. GStreamer related code is only inside ```panelblaster.js```
+    5. Search functionalities are in ```prefssearchradio.js```, ```prefssearchyoutube.js``` and gnome search is in ```searchProvider.js```
 
 * I will probably add MPV support as an alternative to GStreamer in the future.
 * Code checked with [eslint](https://eslint.org/)
