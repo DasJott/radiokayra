@@ -12,6 +12,7 @@ export const PLAY_NEXT_ICON_SIZE = 40;
 
 export const MAX_YOUTUBE_SEARCH_RESULTS = 30;
 export const MAX_RADIO_SEARCH_RESULTS = 30;
+export const MAX_RADIO_SEARCH_RETRIES = 3;
 
 export const SETTINGS_FILE_NAME = "channels.json";
 export const CONFIG_FOLDER_NAME = "radio-kayra";

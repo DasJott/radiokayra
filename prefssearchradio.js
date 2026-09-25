@@ -65,11 +65,17 @@ export const SearchRadioPageHandler = class ChannelInfo {
         this.searchResults.title = _("Search Results");
         this._searchPage.add(this.searchResults);
 
+        this._searchRetries = 0;
         this.search();
     }
     search() {
         let input = this._searchEntry.get_text();
         if (input !== null && input.trim().length > 0) {
+            if (!this.server) {
+                // Server not resolved yet; retry once DNS resolution completes.
+                this.setServer(() => this.search());
+                return;
+            }
             let params = {
                 limit: `${Constants.MAX_RADIO_SEARCH_RESULTS}`
             };
@@ -84,8 +90,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
                     try {
                         let bytes = _httpSession.send_and_read_finish(result);
                         if (message.get_status() !== Soup.Status.OK) {
-                            this.server = null;
-                            this.setServer();
+                            this.retrySearch();
                             return;
                         }
                         let decoder = new TextDecoder('utf-8');
@@ -98,19 +103,43 @@ export const SearchRadioPageHandler = class ChannelInfo {
                         } else { console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_JSON_EMPTY}`); }
                     } catch (e) {
                         console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                        this.retrySearch();
                     }
                 }
             );
         }
     }
-    setServer() {
-        if (this.server) return;
+    retrySearch() {
+        // Pick a different server and retry, up to a bounded number of attempts.
+        this._searchRetries = (this._searchRetries ?? 0) + 1;
+        if (this._searchRetries > Constants.MAX_RADIO_SEARCH_RETRIES) {
+            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} giving up after ${Constants.MAX_RADIO_SEARCH_RETRIES} retries`);
+            this._searchRetries = 0;
+            return;
+        }
+        this.server = null;
+        this.setServer(() => this.search());
+    }
+    setServer(onReady) {
+        if (this.server) { if (onReady) onReady(); return; }
         const res = Gio.Resolver.get_default();
         res.lookup_by_name_async(Constants.RADIO_SEARCH_SERVER_URL, null,
             (source, result) => {
-                const values = source.lookup_by_name_finish(result);
-                const value = values[Math.floor(Math.random() * values.length)];
-                this.server = source.lookup_by_address(value, null);
+                try {
+                    const values = source.lookup_by_name_finish(result);
+                    const value = values[Math.floor(Math.random() * values.length)];
+                    // Resolve the hostname asynchronously so the UI never blocks on reverse DNS.
+                    source.lookup_by_address_async(value, null, (src, addrResult) => {
+                        try {
+                            this.server = src.lookup_by_address_finish(addrResult);
+                            if (onReady) onReady();
+                        } catch (e) {
+                            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                        }
+                    });
+                } catch (e) {
+                    console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                }
             });
     }
     addSearchRow(apiStation) {
