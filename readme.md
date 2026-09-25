@@ -16,23 +16,23 @@
 
 # Introduction
 
-Radio Kayra is a free and open source [Gnome](https://www.gnome.org/) desktop extension that plays your favorite music and podcast streams in the background. 
+Radio Kayra is a free and open source [Gnome](https://www.gnome.org/) desktop extension that plays your favorite music and podcast streams in the background.
 
 It utilizes [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [GStreamer](https://gstreamer.freedesktop.org/) for url/thumbnail resolving and audio playback respectively.
 
 <img src="./.readme/radiokayra.png" alt="Alt Text" width="40%" height="40%">
 
 # Requirements
-1. [Gnome 46,47 or 48](https://gnome.org/) 
-2. [GStreamer](https://gstreamer.freedesktop.org/download/#linux) 
-3. [YTDLP](https://github.com/yt-dlp/yt-dlp/wiki/Installation) 
+1. [Gnome 46,47 or 48](https://gnome.org/)
+2. [GStreamer](https://gstreamer.freedesktop.org/download/#linux)
+3. [yt-dlp](https://github.com/yt-dlp/yt-dlp/wiki/Installation)
 
-# Features 
+# Features
 ## v1.0
 * Gnome tray icon. Play/Stop button. Volume slider.
 * Channel list in a scroll view. Plays with one click.
 * Auto downloads Radio/Video name and thumbnail. You don't have to manually enter.
-* Integrated into Gnome shell search. 
+* Integrated into Gnome shell search.
 * Left mouse click on the radio icon opens the menu, mid click toggles between play / stop, right click opens channel editor.
 * Add/Delete/Edit channels in preferences. You can also move them up and down.
 * Saves last played channel and volume level for each session.
@@ -63,55 +63,55 @@ Now you can right click on the icon and just paste it in the youtube search.
 
 # Channel Management
 
-This window opens if you right click on the radio icon or click "Edit Channels" on the main panel. 
+This window opens if you right click on the radio icon or click "Edit Channels" on the main panel.
 <img src="./.readme/channel_management.png" alt="Alt Text" width="100%" height="100%">
 Here you can see your current channels. On each row there are 4 buttons. Delete channel, Edit Channel, Move Channel Up and Move Channel Down. Last two allows you to sort your channels.
 
 If you click the + button on top of the list, you can manually add a radio channel.
 <img src="./.readme/add_edit_channel.png" alt="Alt Text" width="100%" height="100%">
-Here you can paste your own stream url and a name. 
-* If the url requires no resolving (a direct url to a stream), then uncheck "Use yt-dlp?". Enter a name and click "Add".
-* If the url requires resolving (i.e. Youtube, Rumble, Twitter/X) and is [supported by yt-dlp](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md), then paste the url and leave "Use yt-dlp?" checked. You can enter a name manually or you can click "Fetch from url" to let yt-dlp retrieve the official title (recommended). You can later edit the field.
+Here you can paste your own stream url and a name.
+* If the url requires no resolving (a direct url to a stream), then uncheck "Use yt-dlp". Enter a name and click "Add".
+* If the url requires resolving (i.e. Youtube, Rumble, Twitter/X) and is [supported by yt-dlp](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md), then paste the url and leave "Use yt-dlp" checked. You can enter a name manually or you can click "Fetch from url" to let yt-dlp retrieve the official title (recommended). You can later edit the field.
 
 # Station Search
 
 ## Youtube
-Select "Youtube" tab, type your search phrase and click enter or search button. This will perform a youtube search and the results will be retrieved and displayed asynchronously. It returns up to 30 results. 
+Select "Youtube" tab, type your search phrase and click enter or search button. This will perform a youtube search and the results will be retrieved and displayed asynchronously. It returns up to 30 results.
 
-<img src="./.readme/youtube_search.png" alt="Alt Text" width="100%" height="100%"> 
+<img src="./.readme/youtube_search.png" alt="Alt Text" width="100%" height="100%">
 
 To add a search result. Just click the + button next to it. This will add the channel name, url and the thumbnail to your stations.
 
 ## Radio
 Select "Radio" tab, type your search phrase and click enter or search button. This will perform a radio search and the results will be retrieved synchronously and then displayed (so it may freeze for 1-2 seconds, unlike youtube search). It returns up to 30 results.
 
-<img src="./.readme/radio_search.png" alt="Alt Text" width="100%" height="100%"> 
+<img src="./.readme/radio_search.png" alt="Alt Text" width="100%" height="100%">
 
 To add a search result. Just click the + button next to it. This will add the channel name, url and the thumbnail to your stations.
 
 # Gnome Search
 You can click radio icon and click any channel to play. But you can also search through your channels using integrated Gnome shell search feature. Clicking any of the search results starts playing the channel.
 
-<img src="./.readme/gnome_search.png" alt="Alt Text" width="100%" height="100%"> 
+<img src="./.readme/gnome_search.png" alt="Alt Text" width="100%" height="100%">
 
 # Settings
 
-Select "Settings" tab. Here you can change the right click and hover behaviour as well as the scroll area height. 
+Select "Settings" tab. Here you can change the right click and hover behaviour as well as the scroll area height.
 
-<img src="./.readme/settings.png" alt="Alt Text" width="100%" height="100%"> 
+<img src="./.readme/settings.png" alt="Alt Text" width="100%" height="100%">
 
 # Translations
 
 The extension has English and Turkish languages support by default. But any language can be added without having any programming knowledge.
 
-The strings are ready to be translated by using a program such as [PoEdit](https://poedit.net/download) 
+The strings are ready to be translated by using a program such as [PoEdit](https://poedit.net/download)
 
-* Open the file at your extensions folder 
+* Open the file at your extensions folder
 
-    ```.../radiokayra@dokaton.com/po/radiokayra@dokaton.com.pot```  
+    ```.../radiokayra@dokaton.com/po/radiokayra@dokaton.com.pot```
 
 * Then you can compile the translations as described in [GJS Guide](https://gjs.guide/extensions/development/translations.html#compiling-translations).
-On your extensions folder: 
+On your extensions folder:
 
     ```gnome-extensions pack --podir=po example@gjs.guide```
 
@@ -131,7 +131,7 @@ On your extensions folder:
     "uri": "https://www.youtube.com/watch?v=StZcUAPRRac"
 }
 ```
-* Key features are decoupled and are represented in seperate files for ease of modification.    
+* Key features are decoupled and are represented in seperate files for ease of modification.
     1. Icon names used and various size constants are in ```constants.js```
     2. yt-dlp commands are in ```ytdlphandler.js```
     3. Every sub-panel has a seperate class and file ```popXXX.js```
@@ -139,7 +139,7 @@ On your extensions folder:
     5. Search functionalities are in ```searchradio.js```, ```searchyoutube.js``` and gnome search is in ```searchProvider.js```
 
 * I will probably add MPV support as an alternative to GStreamer in the future.
-* Code checked with [eslint](https://eslint.org/)  
+* Code checked with [eslint](https://eslint.org/)
 
 # Contact
 ayhanavci@gmail.com

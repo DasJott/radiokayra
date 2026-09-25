@@ -36,12 +36,12 @@ export const RadiokayraMenuButton = GObject.registerClass(
             this.disconnect(this._icon_mouse_click_handler);
 
             this.setTrayIconStopped();
-            this._controlsPopup.clear();            
+            this._controlsPopup.clear();
             this._volumeControlPopup.clear();
             this._streamInfoPopup.clear();
             this._settingsMenuItem?.destroy();
 
-            this._controlsPopup = null;            
+            this._controlsPopup = null;
             this._volumeControlPopup = null;
             this._streamInfoPopup = null;
             this._settingsMenuItem = null;
@@ -65,7 +65,7 @@ export const RadiokayraMenuButton = GObject.registerClass(
                 Main.overview.searchController.removeProvider(this._provider);
                 this._provider = null;
             }
-                        
+
             super.destroy();
         }
         setTrayIconStopped() {
@@ -77,29 +77,29 @@ export const RadiokayraMenuButton = GObject.registerClass(
         openPreferences() {
             this._kayraExtension.openPreferences();
         }
-        
-        _init(extension) {       
-            super._init(0.0, "RadiokayraMenuButton");            
+
+        _init(extension) {
+            super._init(0.0, "RadiokayraMenuButton");
             radiokayraPanel = this;
             this._shellVersion = this.getShellversion();
-            //console.log("SHELL VERSION:" + this._shellVersion);            
+            //console.log("SHELL VERSION:" + this._shellVersion);
             this._lastClickedChannelId = "";
             this._kayraExtension = extension;
             this._settings = extension.getSettings();
             this._path = extension.path;
-            this._activeChannel = null;                        
-            
+            this._activeChannel = null;
+
             let volume = this._settings.get_double(Constants.SCHEMA_VOLUME_LEVEL);
-            
+
             this._player = new RadioKayra.RadioPlayer(volume);
-            
+
             //REFRESH CHANNELS EVENT
             this._settings_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_CHANNELS_CHANGE_EVENT, () => {
                 console.info(`EXT: ${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNELS_JSON_CHANGED}`);
-                this._channelSection.removeAll();                
+                this._channelSection.removeAll();
                 this.addChannels();
             });
-            //REFRESH CHANNELS EVENT            
+            //REFRESH CHANNELS EVENT
 
             this._iconStopped = Gio.icon_new_for_string(this._path + Constants.ICON_RADIO_OFF_PATH);
             this._iconPlaying = Gio.icon_new_for_string(this._path + Constants.ICON_RADIO_ON_PATH);
@@ -110,21 +110,21 @@ export const RadiokayraMenuButton = GObject.registerClass(
             });
             this._tooltip = new St.Label({ style_class: 'song-info-panel-tooltip' });
             this.label_actor = this._tooltip;
-            Main.layoutManager.addChrome(this._tooltip);            
-            
+            Main.layoutManager.addChrome(this._tooltip);
+
             this.add_child(this._trayIcon);
-            
+
             this.initRadioCallbacks();
 
             //Controls Section
             this._controlsPopup = new PopControls.ControlsPopup(this._shellVersion);
             this.menu.addMenuItem(this._controlsPopup);
             //console.error(`MY WIDTH IS ${this.get_style()}`);
-            //Controls Section END            
+            //Controls Section END
 
             //Volume Section
             this._volumeControlPopup = new PopVolumeControl.VolumeControlPopup(this._player, this._settings, this._shellVersion);
-            this.menu.addMenuItem(this._volumeControlPopup);            
+            this.menu.addMenuItem(this._volumeControlPopup);
             //Volume Section END
 
             //Stream Info Section
@@ -155,7 +155,7 @@ export const RadiokayraMenuButton = GObject.registerClass(
             this.menu.addMenuItem(this._settingsMenuItem);
             this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
             //Channels Edit Section END
-            
+
             //Channels Section
             this._channelSection = new PopupMenu.PopupMenuSection();
             this._scrollViewMenuSection = new PopupMenu.PopupMenuSection();
@@ -165,18 +165,18 @@ export const RadiokayraMenuButton = GObject.registerClass(
             this._channelScrollView.add_child(this._channelSection.actor);
             let newHeight = radiokayraPanel._settings.get_int(Constants.SCHEMA_PANEL_HEIGHT);
             this._channelScrollView.set_height(newHeight);
-            
-            //PANEL HEIGHT EVENT            
-            this._height_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_PANEL_HEIGHT, () => {                
+
+            //PANEL HEIGHT EVENT
+            this._height_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_PANEL_HEIGHT, () => {
                 newHeight = radiokayraPanel._settings.get_int(Constants.SCHEMA_PANEL_HEIGHT);
                 this._channelScrollView.set_height(newHeight);
             });
             //PANEL HEIGHT EVENT
 
-            this._scrollViewMenuSection.actor.add_child(this._channelScrollView);            
+            this._scrollViewMenuSection.actor.add_child(this._channelScrollView);
             this.menu.addMenuItem(this._scrollViewMenuSection);
             this.addChannels();
-            
+
             //If there is no previously played channel, pick the first one on the list (if any)
             if (this._activeChannel === null && this.channelBoxList !== null && this.channelBoxList.length > 0)
                 this._activeChannel = this.channelBoxList[0];
@@ -194,43 +194,43 @@ export const RadiokayraMenuButton = GObject.registerClass(
                     radiokayraPanel.onPlayClicked();
                 }
                 else if (event.get_button() === 3) { //Right click
-                    this.menu.close();                    
-                    if (radiokayraPanel._settings.get_boolean(Constants.SCHEMA_RIGHTCLICK_SETTINGS)) 
+                    this.menu.close();
+                    if (radiokayraPanel._settings.get_boolean(Constants.SCHEMA_RIGHTCLICK_SETTINGS))
                         radiokayraPanel.openPreferences();
                     if (radiokayraPanel._settings.get_boolean(Constants.SCHEMA_RIGHTCLICK_COPYSONG)) {
                         let song = radiokayraPanel._streamInfoPopup._artist;
-                        if (!Utils.isEmptyString(song)) song += " ";                        
-                        song += radiokayraPanel._streamInfoPopup._title;                        
-                        
+                        if (!Utils.isEmptyString(song)) song += " ";
+                        song += radiokayraPanel._streamInfoPopup._title;
+
                         if (!Utils.isEmptyString(song))
                             St.Clipboard.get_default().set_text(St.ClipboardType.CLIPBOARD, song);
-                    }                     
+                    }
                 }
             });
 
             this._provider = null;
-            if (radiokayraPanel._settings.get_boolean(Constants.SCHEMA_GNOME_SEARCH)) 
-            {                
+            if (radiokayraPanel._settings.get_boolean(Constants.SCHEMA_GNOME_SEARCH))
+            {
                 this._provider = new KayraSearchProvider.SearchProvider(extension, this);
                 Main.overview.searchController.addProvider(this._provider);
-            }  
-            
-            this._search_event_handler = this._settings.connect("changed::" + Constants.SCHEMA_GNOME_SEARCH, () => {                
+            }
+
+            this._search_event_handler = this._settings.connect("changed::" + Constants.SCHEMA_GNOME_SEARCH, () => {
                 let bSearch = radiokayraPanel._settings.get_boolean(Constants.SCHEMA_GNOME_SEARCH);
                 console.error("GNOME SEARCH:" + bSearch);
                 if (bSearch) {
                     if (this._provider !== null) {
-                        Main.overview.searchController.removeProvider(this._provider);                                               
+                        Main.overview.searchController.removeProvider(this._provider);
                     }
-                    this._provider = new KayraSearchProvider.SearchProvider(extension, this); 
+                    this._provider = new KayraSearchProvider.SearchProvider(extension, this);
                     Main.overview.searchController.addProvider(this._provider);
                 }
                 else {
                     Main.overview.searchController.removeProvider(this._provider);
                     this._provider = null;
-                }                                    
+                }
             });
-            
+
             this.stateReady();
             this.setTrayIconStopped();
         }
@@ -261,7 +261,7 @@ export const RadiokayraMenuButton = GObject.registerClass(
                 }
             }
         }
-        _addToChannelSection(channelBox) {            
+        _addToChannelSection(channelBox) {
             this._channelSection.addMenuItem(channelBox);
         }
         enable() {
@@ -279,7 +279,7 @@ export const RadiokayraMenuButton = GObject.registerClass(
                 console.warn("Active Channel is null. This shouldn't happen.")
                 return;
             }
-            radiokayraPanel.setTrayIconPlaying();            
+            radiokayraPanel.setTrayIconPlaying();
             radiokayraPanel._controlsPopup.statePlaying();
             radiokayraPanel._streamInfoPopup.statePlaying(radiokayraPanel._activeChannel);
             radiokayraPanel._player.setVolume(radiokayraPanel._volumeControlPopup.getVolume());
@@ -290,8 +290,8 @@ export const RadiokayraMenuButton = GObject.registerClass(
             radiokayraPanel.stateReady();
         }
         onPlayerError(type, message) { console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_PLAYER_ERROR} [${type}] [${message}]`); }
-        onPlayerTagChanged(artist, title) { 
-            radiokayraPanel._streamInfoPopup.onNewTag(artist, title); 
+        onPlayerTagChanged(artist, title) {
+            radiokayraPanel._streamInfoPopup.onNewTag(artist, title);
             radiokayraPanel.updateToolTip();
         }
         onChannelChanged(channel) {
@@ -315,20 +315,20 @@ export const RadiokayraMenuButton = GObject.registerClass(
                 radiokayraPanel._player.stop();
                 radiokayraPanel.stateReady();
                 radiokayraPanel.setTrayIconStopped();
-            } else { //Play if stopped        
+            } else { //Play if stopped
                 radiokayraPanel.stateLoadingChannel();
                 if (radiokayraPanel._player.isSourceReady()) //A resolved channel was already playing. Continue.
                     radiokayraPanel._player.play();
-                else if (radiokayraPanel._activeChannel.isResolved()) //First time play is clicked. It plays last played channel. Source wasn't ready but url is resolved. Likely a non-youtube stream.          
+                else if (radiokayraPanel._activeChannel.isResolved()) //First time play is clicked. It plays last played channel. Source wasn't ready but url is resolved. Likely a non-youtube stream.
                     radiokayraPanel.playResolvedUrl();
-                else  //First time play is clicked. It plays last played channel. Source isn't ready neither the url. Likely a youtube channel.          
+                else  //First time play is clicked. It plays last played channel. Source isn't ready neither the url. Likely a youtube channel.
                     YtdlpHandler.getShortChannelJson(radiokayraPanel._activeChannel, radiokayraPanel);
 
             }
         }
-        onPlayNextClicked() {            
+        onPlayNextClicked() {
             radiokayraPanel._navigateChannel(radiokayraPanel.findNextChannelBox());
-                     
+
         }
         onPlayPrevClicked() {
             radiokayraPanel._navigateChannel(radiokayraPanel.findPrevChannelBox());
@@ -336,25 +336,25 @@ export const RadiokayraMenuButton = GObject.registerClass(
         _navigateChannel(channel) {
             let activeChannel = radiokayraPanel._activeChannel;
             if (channel === null) {
-                console.info(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Fail]`);  
-                return; 
+                console.info(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Fail]`);
+                return;
             }
             if (activeChannel === null) {
-                console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel not found]`);              
-            }                
+                console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel not found]`);
+            }
             else {
-                if (channel._channelInfo.getId() === activeChannel._channelInfo.getId()) { 
+                if (channel._channelInfo.getId() === activeChannel._channelInfo.getId()) {
                     //Probably just 1 channel in the list. Don't switch.
-                    console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[ID is the same ${activeChannel._channelInfo.getId()}]`);                              
+                    console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[ID is the same ${activeChannel._channelInfo.getId()}]`);
                     return;
                 }
                 else {
                     //More than 1 channels, everything is fine.
-                    console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel: ${activeChannel._channelInfo.getName()}]`);            
-                }                
-            }                            
-            console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Switching to: ${channel._channelInfo.getName()}]`);              
-            radiokayraPanel.onChannelChanged(channel);   
+                    console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel: ${activeChannel._channelInfo.getName()}]`);
+                }
+            }
+            console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Switching to: ${channel._channelInfo.getName()}]`);
+            radiokayraPanel.onChannelChanged(channel);
         }
         onShortChannelJsonSuccess(channelBox, jsonData) {
             if (!Utils.isEmptyString(radiokayraPanel._lastClickedChannelId) && channelBox._channelInfo.getId() !== radiokayraPanel._lastClickedChannelId)
@@ -372,19 +372,19 @@ export const RadiokayraMenuButton = GObject.registerClass(
         }
         onShortChannelJsonError(errormsg) {
             console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_PROCESSED_URL_ERROR}:[${errormsg}]`);
-            Main.notify('Yt-dlp error', errormsg);
+            Main.notify('yt-dlp error', errormsg);
         }
         playResolvedUrl() {
-            let url = radiokayraPanel._activeChannel.getResolvedUrl();            
-            url = Utils.processSpecialCharacters(url, false);        
+            let url = radiokayraPanel._activeChannel.getResolvedUrl();
+            url = Utils.processSpecialCharacters(url, false);
             radiokayraPanel._player.changeChannel(url);
             radiokayraPanel._player.play();
         }
         stateReady() {
-            radiokayraPanel._controlsPopup.stateReady();            
+            radiokayraPanel._controlsPopup.stateReady();
             radiokayraPanel._streamInfoPopup.resetTags();
         }
-        stateLoadingChannel() {                        
+        stateLoadingChannel() {
             radiokayraPanel._streamInfoPopup.stateLoading();
             radiokayraPanel._controlsPopup.stateLoading();
             console.info("Playing Link:[" + radiokayraPanel._activeChannel._channelInfo.getUri() + "] Ytdl:[" + radiokayraPanel._activeChannel._channelInfo.getUseYtdlp() + "]");
@@ -400,61 +400,61 @@ export const RadiokayraMenuButton = GObject.registerClass(
             }
             return null;
         }
-        findPrevChannelBox() {          
+        findPrevChannelBox() {
             if (radiokayraPanel.channelBoxList.length === 0 || radiokayraPanel._activeChannel === null)
-                return null;    
+                return null;
             let activeChannelInfo = radiokayraPanel._activeChannel._channelInfo;
-            //console.error(`Active channel order ${activeChannelInfo.getOrder()}`);        
+            //console.error(`Active channel order ${activeChannelInfo.getOrder()}`);
 
             for (let i = radiokayraPanel.channelBoxList.length - 1; i >= 0; --i) {
-                let channelBox = radiokayraPanel.channelBoxList[i];                
-                if (channelBox._channelInfo.getOrder() < activeChannelInfo.getOrder()) return channelBox;                
+                let channelBox = radiokayraPanel.channelBoxList[i];
+                if (channelBox._channelInfo.getOrder() < activeChannelInfo.getOrder()) return channelBox;
             }
             return radiokayraPanel.channelBoxList[radiokayraPanel.channelBoxList.length - 1];
         }
-        findNextChannelBox() {                          
+        findNextChannelBox() {
             if (radiokayraPanel.channelBoxList.length === 0 || radiokayraPanel._activeChannel === null)
-                return null;    
+                return null;
             let activeChannelInfo = radiokayraPanel._activeChannel._channelInfo;
-            //console.error(`Active channel order ${activeChannelInfo.getOrder()}`);        
+            //console.error(`Active channel order ${activeChannelInfo.getOrder()}`);
 
             for (let i = 0; i < radiokayraPanel.channelBoxList.length; ++i) {
                 let channelBox = radiokayraPanel.channelBoxList[i];
                 if (channelBox._channelInfo.getOrder() > activeChannelInfo.getOrder()) return channelBox;
-                
+
             }
             return radiokayraPanel.channelBoxList[0];
         }
         updateToolTip() {
             if (this._tooltip === null)
-                return;            
-            let text = "";            
+                return;
+            let text = "";
             let artist = radiokayraPanel._streamInfoPopup._artist;
             let title = radiokayraPanel._streamInfoPopup._title;
             let channelName = radiokayraPanel._streamInfoPopup._channelName;
-            let isPlaying = radiokayraPanel._player.isPlaying();            
+            let isPlaying = radiokayraPanel._player.isPlaying();
 
-            if (isPlaying) {                
-                if (!Utils.isEmptyString(artist)) {                    
+            if (isPlaying) {
+                if (!Utils.isEmptyString(artist)) {
                     artist = Utils.processSpecialCharacters(artist, false);
                     text += Utils.truncateString(artist, Constants.MAX_TOOLTIP_WIDTH);
                     text += "\n";
-                }                                   
-    
-                if (!Utils.isEmptyString(title)) {                    
+                }
+
+                if (!Utils.isEmptyString(title)) {
                     title = Utils.processSpecialCharacters(title, false);
                     text += Utils.truncateString(title, Constants.MAX_TOOLTIP_WIDTH);
                     text += "\n";
-                } 
+                }
             }
-              
-            if (!Utils.isEmptyString(channelName)) {                
+
+            if (!Utils.isEmptyString(channelName)) {
                 channelName = Utils.processSpecialCharacters(channelName, false);
-                text += Utils.truncateString(channelName, Constants.MAX_TOOLTIP_WIDTH);            
-            }                
+                text += Utils.truncateString(channelName, Constants.MAX_TOOLTIP_WIDTH);
+            }
             this._tooltip.text = text;
         }
-        showTooltip() {            
+        showTooltip() {
             if (this._tooltip === null || !radiokayraPanel._settings.get_boolean(Constants.SCHEMA_SONG_TOOLTIP))
                 return;
             this.updateToolTip();
@@ -462,10 +462,10 @@ export const RadiokayraMenuButton = GObject.registerClass(
             this._tooltip.show();
 
             let [stageX, stageY] = this.get_transformed_position();
-            
+
             let itemWidth = this.allocation.x2 - this.allocation.x1;
             let tooltipWidth = this._tooltip.get_width();
-            
+
             let y = stageY + 40;
             let x = Math.floor(stageX + itemWidth / 2 - tooltipWidth / 2);
 
@@ -507,7 +507,7 @@ export const RadiokayraMenuButton = GObject.registerClass(
         getShellversion() {
             const [major] = Config.PACKAGE_VERSION.split('.');
             return Number.parseInt(major);
-        }        
+        }
         async _buildMenu() { }
     },
 );

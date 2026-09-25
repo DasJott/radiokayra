@@ -22,7 +22,7 @@ export const RadioPlayer = class RadioPlayer {
   changeChannel(uri) {
     if (!this.initialized) this.initPipeLine();
     if (this.source !== null) this.pipeline.remove(this.source);
-    this.source = Gst.ElementFactory.make("playbin3", "source");    
+    this.source = Gst.ElementFactory.make("playbin3", "source");
     this.source.set_property("uri", uri);
     this.source.set_property("volume", this.volume);
     this.pipeline.add(this.source);
@@ -36,7 +36,7 @@ export const RadioPlayer = class RadioPlayer {
     this.playing = true;
   }
   stop() {
-    this.pipeline.set_state(Gst.State.NULL);
+    if (this.initialized) this.pipeline.set_state(Gst.State.NULL);
     this.playing = false;
   }
   setVolume(newValue) {
@@ -62,11 +62,11 @@ export const RadioPlayer = class RadioPlayer {
   setOnTagChanged(onTagChanged) { this.onTagChanged = onTagChanged; }
 
   onGstMessage(message) {
-    
+
     //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_INFO_SOLOG_GST_MESSAGE_RECEIVEDNG_LABEL_SHOW}: [${message.type}]`);
     switch (message.type) {
       case Gst.MessageType.STATE_CHANGED:
-        //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_GST_STATE_CHANGED}: [${msg.parse_state_changed()}]`);        
+        //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_GST_STATE_CHANGED}: [${msg.parse_state_changed()}]`);
         break;
       case Gst.MessageType.ELEMENT:
         if (Gstpbutils.is_missing_plugin_message(message)) {
@@ -89,7 +89,7 @@ export const RadioPlayer = class RadioPlayer {
           break;
         }
       case Gst.MessageType.STREAM_START:
-        //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_GST_STREAM_STARTED}`);                         
+        //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_GST_STREAM_STARTED}`);
         if (this.onStreamStarted !== null) this.onStreamStarted();
         break;
       case Gst.MessageType.NEED_CONTEXT: //536870912
@@ -101,7 +101,7 @@ export const RadioPlayer = class RadioPlayer {
       case Gst.MessageType.NEW_CLOCK: //2048
         break;
       case Gst.MessageType.EOS:
-        //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_GST_STREAM_ENDED}`);  
+        //console.log(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_GST_STREAM_ENDED}`);
         if (this.onStreamEnded !== null) this.onStreamEnded();
         break;
       case Gst.MessageType.ERROR:

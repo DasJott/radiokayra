@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-07 14:09+0300\n"
+"POT-Creation-Date: 2026-09-25 10:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: kayramenu.js:147 prefssettingsspage.js:22
+#: kayramenu.js:148 prefssettingsspage.js:22
 msgid "Settings"
 msgstr ""
 
@@ -34,34 +34,32 @@ msgid "About"
 msgstr ""
 
 #: prefsaboutspage.js:26
-msgid ""
-"Radio Kayra v2.0\n"
-"A foss hobby project by Ayhan Avcı (2024-2025)"
+msgid "A foss hobby project by Ayhan Avcı (2024-2025)"
 msgstr ""
 
-#: prefsaboutspage.js:26
+#: prefsaboutspage.js:28
 msgid ""
 "Mid clicking the radio icon toggles play / stop.\n"
 "Don't forget to install yt-dlp &amp; gstreamer. Links at the bottom. Enjoy!"
 msgstr ""
 
-#: prefsaboutspage.js:29
+#: prefsaboutspage.js:31
 msgid "Links"
 msgstr ""
 
-#: prefsaboutspage.js:32
+#: prefsaboutspage.js:34
 msgid "Project"
 msgstr ""
 
-#: prefsaboutspage.js:43
+#: prefsaboutspage.js:45
 msgid "Extension"
 msgstr ""
 
-#: prefsaboutspage.js:54
-msgid "Yt-dlp"
+#: prefsaboutspage.js:56
+msgid "yt-dlp"
 msgstr ""
 
-#: prefsaboutspage.js:65
+#: prefsaboutspage.js:67
 msgid "GStreamer"
 msgstr ""
 
@@ -82,23 +80,23 @@ msgstr ""
 msgid "Search Results"
 msgstr ""
 
-#: prefssearchradio.js:127
+#: prefssearchradio.js:129
 msgid "Country: "
 msgstr ""
 
-#: prefssearchradio.js:128
+#: prefssearchradio.js:130
 msgid "Tags: "
 msgstr ""
 
-#: prefssearchradio.js:129 prefssearchyoutube.js:93
+#: prefssearchradio.js:131 prefssearchyoutube.js:93
 msgid "Link: "
 msgstr ""
 
-#: prefssearchradio.js:130
+#: prefssearchradio.js:132
 msgid "Codec: "
 msgstr ""
 
-#: prefssearchradio.js:131
+#: prefssearchradio.js:133
 msgid "Bitrate: "
 msgstr ""
 
@@ -163,46 +161,46 @@ msgstr ""
 msgid "Search and play your stations using Gnome search."
 msgstr ""
 
-#: prefsstationspage.js:24
+#: prefsstationspage.js:23
 msgid "Stations"
 msgstr ""
 
-#: prefsstationspage.js:25
-msgid "Add / Edit and Delete radio stations."
+#: prefsstationspage.js:24
+msgid "Add, edit and delete radio stations and channels."
 msgstr ""
 
-#: prefsstationspage.js:33
-msgid "Radio Channels"
+#: prefsstationspage.js:32
+msgid "Stations and Channels"
 msgstr ""
 
-#: prefsstationspage.js:178
+#: prefsstationspage.js:218
 msgid "Add a New Channel"
 msgstr ""
 
-#: prefsstationspage.js:178
+#: prefsstationspage.js:218
 msgid "Edit Channel"
 msgstr ""
 
-#: prefsstationspage.js:196
+#: prefsstationspage.js:236
 msgid "Channel URL:"
 msgstr ""
 
-#: prefsstationspage.js:220
+#: prefsstationspage.js:260
 msgid "Channel Name:"
 msgstr ""
 
-#: prefsstationspage.js:230
+#: prefsstationspage.js:270
 msgid "Fetch from url"
 msgstr ""
 
-#: prefsstationspage.js:252
-msgid "Use yt-dlp?"
+#: prefsstationspage.js:292
+msgid "Use yt-dlp"
 msgstr ""
 
-#: prefsstationspage.js:255
+#: prefsstationspage.js:295
 msgid "Add"
 msgstr ""
 
-#: prefsstationspage.js:255
+#: prefsstationspage.js:295
 msgid "Update"
 msgstr ""

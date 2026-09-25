@@ -11,7 +11,7 @@ import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensi
 export const StationsPageHandler = class StationsPageHandler {
     constructor(kayraPrefs) {
         this._kayraPrefs = kayraPrefs;
-        this._window = kayraPrefs._window;        
+        this._window = kayraPrefs._window;
     }
     clear() {
         this._channelGroup = null;
@@ -21,7 +21,7 @@ export const StationsPageHandler = class StationsPageHandler {
     createPage() {
         this._stationsPage = new Adw.PreferencesPage();
         this._stationsPage.title = _("Stations");
-        this._stationsPage.description = _("Add / Edit and Delete radio stations.");
+        this._stationsPage.description = _("Add, edit and delete radio stations and channels.");
         this._stationsPage.icon_name = Constants.ICON_STATIONS_PAGE;
 
         this._window.add(this._stationsPage);
@@ -29,7 +29,7 @@ export const StationsPageHandler = class StationsPageHandler {
         this._channelGroup = new Adw.PreferencesGroup();
 
         const row = new Adw.ActionRow();
-        row.title = _("Radio Channels");
+        row.title = _("Stations and Channels");
         const addNewButton = new Gtk.Button({
             valign: Gtk.Align.CENTER,
             icon_name: Constants.ICON_ADD_CHANNEL,
@@ -139,9 +139,9 @@ export const StationsPageHandler = class StationsPageHandler {
     }
     moveDownChannel(row) {
         let id = row.name;
-        if (this._rows[this._rows.length - 1].name === id) 
+        if (this._rows[this._rows.length - 1].name === id)
             return;  //This was the last row. Nothing to do
-        
+
         for (let index = 0; index < this._channels.length - 1; ++index) {
             let channelData = this._channels[index];
             if (channelData.id === id) {
@@ -152,7 +152,7 @@ export const StationsPageHandler = class StationsPageHandler {
                 break;
             }
         }
-        
+
         for (let index = 0; index < this._rows.length - 1; ++index) {
             let curRow = this._rows[index];
             if (curRow.name === id) {
@@ -162,11 +162,11 @@ export const StationsPageHandler = class StationsPageHandler {
 
         }
     }
-    
-    moveUpChannel(row) {        
+
+    moveUpChannel(row) {
         let id = row.name;
         console.error(`NEW CHANGES. MOVEUP ROW:[${row}] ID:[${id}]`);
-        if (this._rows[0].name === id) 
+        if (this._rows[0].name === id)
             return;  //This was the first row. Nothing to do
 
         for (let index = 1; index < this._channels.length; ++index) {
@@ -176,14 +176,14 @@ export const StationsPageHandler = class StationsPageHandler {
                 let tempOrder = this._channels[index].order;
                 this._channels[index].order = this._channels[index - 1].order;
                 this._channels[index - 1].order = tempOrder;
-                this.writeChannels();                
+                this.writeChannels();
                 break;
             }
         }
 
         for (let index = 1; index < this._rows.length; ++index) {
             let curRow = this._rows[index];
-            if (curRow.name === id) {                
+            if (curRow.name === id) {
                 this.swapChannels(index, index - 1);
                 break;
             }
@@ -200,7 +200,7 @@ export const StationsPageHandler = class StationsPageHandler {
         this._rows[index2].name = tempId;
         this._rows[index2].title = tempTitle;
     }
-    
+
 
     openEditWindow(row) {
         let id = null;
@@ -289,7 +289,7 @@ export const StationsPageHandler = class StationsPageHandler {
             orientation: Gtk.Orientation.HORIZONTAL,
             spacing: 5,
         });
-        this.ytdlpCheck = new Gtk.CheckButton({ label: _("Use yt-dlp?") });
+        this.ytdlpCheck = new Gtk.CheckButton({ label: _("Use yt-dlp") });
         this.ytdlpCheck.set_active(true);
         let saveChannelButton = new Gtk.Button({
             label: channelInfo === null ? _("Add") : _("Update"),
@@ -402,7 +402,7 @@ export const StationsPageHandler = class StationsPageHandler {
                 this._channels[index].name = name;
                 this._channels[index].uri = uri;
                 this._channels[index].useYtdlp = useYtdlp;
-                this.writeChannels();                
+                this.writeChannels();
                 row.name = id;
                 row.title = name;
                 return;
@@ -420,7 +420,7 @@ export const StationsPageHandler = class StationsPageHandler {
             uri: newUri,
         };
         this._channels.push(newChannel);
-        this.writeChannels();        
+        this.writeChannels();
         let channelInfo = new Channels.ChannelInfo(
             newId,
             newName,
@@ -429,7 +429,7 @@ export const StationsPageHandler = class StationsPageHandler {
             newUseYtdlp,
             false
         );
-        this.fillChannelRow(channelInfo);        
+        this.fillChannelRow(channelInfo);
     }
     channelExists(encodedUri) {
         for (let index = 0; index < this._channels.length; ++index) {
