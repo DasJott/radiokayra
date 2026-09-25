@@ -134,11 +134,11 @@ export const SearchRadioPageHandler = class ChannelInfo {
                             this.server = src.lookup_by_address_finish(addrResult);
                             if (onReady) onReady();
                         } catch (e) {
-                            console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
                         }
                     });
                 } catch (e) {
-                    console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
+                    console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
                 }
             });
     }

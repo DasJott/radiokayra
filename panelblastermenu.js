@@ -104,6 +104,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             this._settings = extension.getSettings();
             this._path = extension.path;
             this._activeChannel = null;
+            this.channelBoxList = [];
 
             let volume = this._settings.get_double(Constants.SCHEMA_VOLUME_LEVEL);
 
@@ -112,7 +113,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             //REFRESH CHANNELS EVENT
             this._settings_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_CHANNELS_CHANGE_EVENT, () => {
                 console.info(`EXT: ${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNELS_JSON_CHANGED}`);
-                this._channelSection.removeAll();
                 this.addChannels();
             });
             //REFRESH CHANNELS EVENT
@@ -230,9 +230,15 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             this.setTrayIconStopped();
         }
         async addChannels() {
+            const loadToken = (this._channelsLoadToken = (this._channelsLoadToken ?? 0) + 1);
             let channelsReadWrite = new Channels.ChannelsReadWrite(panelBlasterPanel._path);
             let channels = await channelsReadWrite.getChannels();
+
+            // Ignore stale loads (a newer refresh started) or a destroyed button.
+            if (loadToken !== this._channelsLoadToken || this._channelSection === null) return;
+
             let lastPlayedId = panelBlasterPanel._settings.get_string(Constants.SCHEMA_LAST_PLAYED);
+            this._channelSection.removeAll();
             this.channelBoxList = [];
 
             if (channels === null) return;
