@@ -18,8 +18,8 @@ export const SearchRadioPageHandler = class ChannelInfo {
         });
         this.setServer();
     }
-    clear() { 
-        this._httpSession = null; 
+    clear() {
+        this._httpSession = null;
     }
     createPage() {
         this._searchPage = new Adw.PreferencesPage();
@@ -71,31 +71,33 @@ export const SearchRadioPageHandler = class ChannelInfo {
         let input = this._searchEntry.get_text();
         if (input !== null && input.trim().length > 0) {
             let params = {
-                name: input,
                 limit: `${Constants.MAX_RADIO_SEARCH_RESULTS}`
             };
             let message = Soup.Message.new_from_encoded_form(
                 'POST',
-                "http://" + this.server + "/json/stations/byname/" + input,
+                "http://" + this.server + "/json/stations/byname/" + encodeURIComponent(input),
                 Soup.form_encode_hash(params)
             );
             this._httpSession.send_and_read_async(
                 message, GLib.PRIORITY_DEFAULT, null,
                 (_httpSession, result) => {
-                    if (message.get_status() === Soup.Status.OK) {
+                    try {
                         let bytes = _httpSession.send_and_read_finish(result);
+                        if (message.get_status() !== Soup.Status.OK) {
+                            this.server = null;
+                            this.setServer();
+                            return;
+                        }
                         let decoder = new TextDecoder('utf-8');
                         let response = decoder.decode(bytes.get_data());
-                        console.info("[" + response + "]");
                         let jsonResponse = JSON.parse(response);
                         if (jsonResponse.length > 0) {
                             for (let i = 0; i < jsonResponse.length; i++) {
                                 this.addSearchRow(jsonResponse[i]);
                             }
-                        } else { console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_JSON_EMPTY}`);                        }
-                    } else {                        
-                        this.server = null;
-                        this.setServer();
+                        } else { console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_JSON_EMPTY}`); }
+                    } catch (e) {
+                        console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
                     }
                 }
             );
@@ -114,8 +116,8 @@ export const SearchRadioPageHandler = class ChannelInfo {
     addSearchRow(apiStation) {
         try {
             const act = new Adw.ActionRow();
-            act.title = Utils.processSpecialCharacters(apiStation.name, true);;
-            
+            act.title = Utils.processSpecialCharacters(apiStation.name, true);
+
             let tagsShort = apiStation.tags;
             if (tagsShort.length > 50)
                 tagsShort = tagsShort.substring(0, 50) + "...";
@@ -129,7 +131,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
                 + _("Link: ") + urlShort + "\n"
                 + _("Codec: ") + apiStation.codec + "\n"
                 + _("Bitrate: ") + apiStation.bitrate + "kb/s\n";
-            
+
             act.subtitle = Utils.processSpecialCharacters(subtitle, true);
             const addButton = new Gtk.Button({
                 valign: Gtk.Align.CENTER,
@@ -149,38 +151,41 @@ export const SearchRadioPageHandler = class ChannelInfo {
     }
     loadThumbnail(act, apiStation) {
         try {
-            let iconTexture = null;
-            let favicon = apiStation.favicon;
-
-            if (favicon && !favicon.endsWith('/')) {
-                try {
-                    const file = Gio.File.new_for_uri(favicon);
-                    iconTexture = Gdk.Texture.new_from_file(file);
-                }
-                catch (error) { console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${favicon}] [${error}]`);  }
-            }
             let thumbNail = Gtk.Image.new();
-            if (iconTexture !== null) thumbNail.set_from_paintable(iconTexture);
-            else thumbNail.set_from_icon_name(Constants.ICON_CHANNEL_THUMB_PLACEHOLDER);
+            thumbNail.set_from_icon_name(Constants.ICON_CHANNEL_THUMB_PLACEHOLDER);
             thumbNail.set_pixel_size(Constants.SEARCH_PIXEL_SIZE);
             act.add_prefix(thumbNail);
+
+            let favicon = apiStation.favicon;
+            if (favicon && !favicon.endsWith('/')) {
+                // Fetch the remote favicon off the main loop so the UI stays responsive.
+                const file = Gio.File.new_for_uri(favicon);
+                file.load_bytes_async(null, (source, result) => {
+                    try {
+                        const [bytes] = source.load_bytes_finish(result);
+                        thumbNail.set_from_paintable(Gdk.Texture.new_from_bytes(bytes));
+                    } catch (error) {
+                        console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${favicon}] [${error}]`);
+                    }
+                });
+            }
         } catch (error) {
             console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL}: [${error}]`);
         }
-        
+
     }
 
     saveThumbnail(favicon, destinationFileName) {
         try {
             const file = Gio.File.new_for_uri(favicon);
             const destinationFile = Gio.File.new_for_path(destinationFileName);
-            
+
             file.copy(destinationFile, 0, null, () => {//FIX 1 current_num_bytes, total_num_bytes
-                
+
             });
         }
         catch (error) {
-            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_SAVE_THUMBNAIL}: [${favicon}] [${error}]`);            
+            console.warn(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_SAVE_THUMBNAIL}: [${favicon}] [${error}]`);
         }
     }
 
@@ -192,7 +197,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
 
         //TODO: UPDATE IF ALREADY EXISTS
 
-        if (!this._kayraPrefs._stationsPageHandler.channelExists(encodedUri)) { //new channel, new uri  
+        if (!this._kayraPrefs._stationsPageHandler.channelExists(encodedUri)) { //new channel, new uri
             if (channel.favicon && !channel.favicon.endsWith('/'))
                 Utils.saveThumbnail(channel.favicon, Utils.getConfigPath() + "/" + id);
             this._kayraPrefs._stationsPageHandler.addChannelInfo(id, encodedName, encodedUri, false);

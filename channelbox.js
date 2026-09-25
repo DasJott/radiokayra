@@ -42,7 +42,7 @@ export const ChannelBox = GObject.registerClass(
             this._channelLabel.clutter_text.set_max_length(40);
             this.add_child(this._channelLabel);
         }
-       
+
         clear() {
             this._thumbnail?.destroy();
             this._thumbnail = null;
@@ -81,11 +81,13 @@ export const ChannelBox = GObject.registerClass(
                     const width = pixbuf.get_width();
                     const height = pixbuf.get_height();
 
-                    this._thumbnail.set_scale(width / height, 1);
+                    // Fit by the longer side so wide images never overflow the menu width.
+                    if (width >= height) this._thumbnail.set_scale(1, height / width);
+                    else this._thumbnail.set_scale(width / height, 1);
                     this._thumbnail.set_pivot_point(0.5, 0.5);
                 }
                 catch (error) {
-                    console.warn(`${Constants.LOG_PREFIX_POPUPS} ${Constants.LOG_ADD_THUMBNAIL_ERROR}:[${error}]`);                    
+                    console.warn(`${Constants.LOG_PREFIX_POPUPS} ${Constants.LOG_ADD_THUMBNAIL_ERROR}:[${error}]`);
                 }
             }
             else {

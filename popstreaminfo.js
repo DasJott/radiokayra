@@ -24,24 +24,24 @@ export const StreamInfoPopup = GObject.registerClass(
                 can_focus: true,
             });
             this._channelName = "";
-            this._artist = "";     
-            this._title = "";            
+            this._artist = "";
+            this._title = "";
             this.hide();
-            this._player = player;            
+            this._player = player;
             this._extensionPath = extensionPath;
 
-            this._streamLayout = new St.BoxLayout({                
+            this._streamLayout = new St.BoxLayout({
                 x_align: Clutter.ActorAlign.CENTER,
                 style_class: "layout-box",
-                //width: Constants.DEFAULT_PANEL_WIDTH,                
-            });      
-            //Gnome 48 or below?       
-            if (shellVersion < 48) this._streamLayout.vertical = true;            
+                //width: Constants.DEFAULT_PANEL_WIDTH,
+            });
+            //Gnome 48 or below?
+            if (shellVersion < 48) this._streamLayout.vertical = true;
             else this._streamLayout.orientation = Clutter.Orientation.VERTICAL;
-            
-            
-            this.add_child(this._streamLayout);                                               
-            
+
+
+            this.add_child(this._streamLayout);
+
             //Loading info
             this._loadingSpinner = new Animation.Spinner(16);
             this._streamLayout.add_child(this._loadingSpinner);
@@ -49,11 +49,11 @@ export const StreamInfoPopup = GObject.registerClass(
             this._loadtxt = new St.Label({
                 text: "",
                 style: "padding:5px",
-                x_align: Clutter.ActorAlign.CENTER,                
+                x_align: Clutter.ActorAlign.CENTER,
                 x_expand: true,
                 reactive: true,
             });
-            this._streamLayout.add_child(this._loadtxt); 
+            this._streamLayout.add_child(this._loadtxt);
 
             //Channel Name
             this._channelNameLabel = new St.Label({
@@ -120,10 +120,10 @@ export const StreamInfoPopup = GObject.registerClass(
                 x_expand: true,
             });
             this._streamLayout.add_child(this._onair);
-            this.hideOnAir(); 
+            this.hideOnAir();
             this.stateReady();
         }
-       
+
         clear() {
             this._streamLayout?.destroy();
             this._streamLayout = null;
@@ -155,13 +155,13 @@ export const StreamInfoPopup = GObject.registerClass(
             this._channelNameLabel.show();
             this._songLabel.show();
             this._loadingSpinner.stop();
-            this._loadingSpinner.hide();            
-            this._loadtxt.hide();            
+            this._loadingSpinner.hide();
+            this._loadtxt.hide();
             this.showThumbnail(channelBox);
             this.setChannelName(channelBox._channelInfo.getName());
             this.show();
             if (channelBox._is_live) { this.showOnAir(); this.hideDuration(); }
-            else if (channelBox._duration !== 0) { this.showDuration(channelBox); this.hideOnAir();} 
+            else if (channelBox._duration !== 0) { this.showDuration(channelBox); this.hideOnAir();}
             else { this.hideOnAir(); this.hideDuration();}
 
             //Uncomment if you want to do something with the video info
@@ -174,8 +174,8 @@ export const StreamInfoPopup = GObject.registerClass(
             this._songLabel.hide();
             this._loadtxt.set_text(_("Loading..."));
             this._loadingSpinner.play();
-            this._loadtxt.show();            
-            this._loadingSpinner.show();            
+            this._loadtxt.show();
+            this._loadingSpinner.show();
         }
         stateReady() {
             this._onair.show();
@@ -200,9 +200,9 @@ export const StreamInfoPopup = GObject.registerClass(
             this._artistLabel.hide();
             this._songLabel.hide();
         }
-        onNewTag(artist, title) {       
-            this._artist = artist;     
-            this._title = title;                        
+        onNewTag(artist, title) {
+            this._artist = artist;
+            this._title = title;
 
             if (Utils.isEmptyString(artist)) this._artistLabel.hide();
             else {
@@ -237,7 +237,9 @@ export const StreamInfoPopup = GObject.registerClass(
                     const pixbuf = GdkPixbuf.Pixbuf.new_from_file(thumbNailPath);
                     const width = pixbuf.get_width();
                     const height = pixbuf.get_height();
-                    this._thumbnail.set_scale(width / height, 1);
+                    // Fit by the longer side so wide images never overflow the menu width.
+                    if (width >= height) this._thumbnail.set_scale(1, height / width);
+                    else this._thumbnail.set_scale(width / height, 1);
                     this._thumbnail.set_pivot_point(0.5, 0.5);
                 }
                 catch (error) {
@@ -265,7 +267,7 @@ export const StreamInfoPopup = GObject.registerClass(
             this._onair.set_pivot_point(0.5, 0.5);
         }
         hideOnAir() { this._onair.hide(); }
-        showDuration(channelBox) {            
+        showDuration(channelBox) {
             this._durationLabel.text = channelBox._duration.toString();
             this._durationLabel.show();
         }
