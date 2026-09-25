@@ -229,7 +229,6 @@ export const StreamInfoPopup = GObject.registerClass(
                 title = Utils.truncateString(title, Constants.MAX_SONG_TITLE);
                 this.show();
                 this._songLabel.show();
-                console.log(`${Constants.LOG_PREFIX_POPUPS} ${Constants.LOG_INFO_SONG_LABEL_SHOW}: [${artist}] [${title}]`);
             }
             this._artistLabel.text = artist;
             this._songLabel.text = title;

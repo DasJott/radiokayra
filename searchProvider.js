@@ -166,7 +166,6 @@ export class SearchProvider {
             width: scaledWidth * scaleFactor,
             height: scaledHeight * scaleFactor,
         });
-        //console.info(`SCALE FACTOR: ${scaleFactor} W:${trueWidth} H:${trueHeight} S:${size} SW:${scaledWidth} SH:${scaledHeight}`);
         thumbnail.set_scale(trueWidth / trueHeight, 1);
         thumbnail.set_pivot_point(0.5, 0.5);
         if (fileExists) thumbnail.gicon = thumbNailIcon;

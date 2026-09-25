@@ -14,7 +14,6 @@ import { ExtensionPreferences, gettext as _, } from "resource:///org/gnome/Shell
 export default class PanelBlasterPreferences extends ExtensionPreferences {
   constructor(metadata) {
     super(metadata);
-    console.info(`constructing ${this.metadata.name}`);
   }
   fillPreferencesWindow(window) {
     this._window = window;

@@ -9,7 +9,9 @@ vars:
 tasks:
   pack:
     desc: Build the GNOME Shell extension bundle ({{.UUID}}.shell-extension.zip)
+    silent: true
     cmds:
+      - echo "packing..."
       # Compile the schema so the extension can also be run from the source tree;
       # the packed bundle only ships the .xml, which GNOME compiles on install.
       - glib-compile-schemas schemas/
@@ -29,6 +31,7 @@ tasks:
           --extra-source=images \
           $extra \
           .
+      - echo "...done packing!"
 
   lint:
     desc: Validate the packed bundle with shexli, catching review issues early

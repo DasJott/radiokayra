@@ -98,7 +98,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             super._init(0.0, "PanelBlasterMenuButton");
             panelBlasterPanel = this;
             this._shellVersion = this.getShellversion();
-            //console.log("SHELL VERSION:" + this._shellVersion);
             this._lastClickedChannelId = "";
             this._panelBlasterExtension = extension;
             this._settings = extension.getSettings();
@@ -112,7 +111,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             //REFRESH CHANNELS EVENT
             this._settings_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_CHANNELS_CHANGE_EVENT, () => {
-                console.info(`EXT: ${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNELS_JSON_CHANGED}`);
                 this.addChannels();
             });
             //REFRESH CHANNELS EVENT
@@ -140,7 +138,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             //Controls Section
             this._controlsPopup = new PopControls.ControlsPopup(this._shellVersion);
             this.menu.addMenuItem(this._controlsPopup);
-            //console.error(`MY WIDTH IS ${this.get_style()}`);
             //Controls Section END
 
             //Volume Section
@@ -208,7 +205,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             this._search_event_handler = this._settings.connect("changed::" + Constants.SCHEMA_GNOME_SEARCH, () => {
                 let bSearch = panelBlasterPanel._settings.get_boolean(Constants.SCHEMA_GNOME_SEARCH);
-                console.debug("GNOME SEARCH:" + bSearch);
                 if (bSearch) {
                     if (this._provider !== null) {
                         Main.overview.searchController.removeProvider(this._provider);
@@ -286,7 +282,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             panelBlasterPanel._controlsPopup.statePlaying();
             panelBlasterPanel._streamInfoPopup.statePlaying(panelBlasterPanel._activeChannel);
             panelBlasterPanel._player.setVolume(panelBlasterPanel._volumeControlPopup.getVolume());
-            console.info("STREAM STARTED");
         }
         onPlayerStreamEnded() {
             panelBlasterPanel.setTrayIconStopped();
@@ -298,8 +293,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             panelBlasterPanel.updateToolTip();
         }
         onChannelChanged(channel) {
-            if (panelBlasterPanel._activeChannel === null) console.info(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_CHANGED}:[] -> [${channel._channelInfo.getId()}]`);
-            else console.info(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_CHANGED}:[${panelBlasterPanel._activeChannel._channelInfo.getId()}] -> [${channel._channelInfo.getId()}]`);
             panelBlasterPanel._activeChannel = channel;
             panelBlasterPanel._lastClickedChannelId = panelBlasterPanel._activeChannel._channelInfo.getId();
 
@@ -338,31 +331,14 @@ export const PanelBlasterMenuButton = GObject.registerClass(
         }
         _navigateChannel(channel) {
             let activeChannel = panelBlasterPanel._activeChannel;
-            if (channel === null) {
-                console.info(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Fail]`);
-                return;
-            }
-            if (activeChannel === null) {
-                console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel not found]`);
-            }
-            else {
-                if (channel._channelInfo.getId() === activeChannel._channelInfo.getId()) {
-                    //Probably just 1 channel in the list. Don't switch.
-                    console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[ID is the same ${activeChannel._channelInfo.getId()}]`);
-                    return;
-                }
-                else {
-                    //More than 1 channels, everything is fine.
-                    console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Active channel: ${activeChannel._channelInfo.getName()}]`);
-                }
-            }
-            console.debug(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_CHANNEL_NAVIGATE}:[Switching to: ${channel._channelInfo.getName()}]`);
+            if (channel === null) return;
+            // Same channel (e.g. only one in the list): don't switch.
+            if (activeChannel !== null && channel._channelInfo.getId() === activeChannel._channelInfo.getId()) return;
             panelBlasterPanel.onChannelChanged(channel);
         }
         onShortChannelJsonSuccess(channelBox, jsonData) {
             if (!Utils.isEmptyString(panelBlasterPanel._lastClickedChannelId) && channelBox._channelInfo.getId() !== panelBlasterPanel._lastClickedChannelId)
                 return; //User clicked another channel before yt-dlp returned. Don't do anything!
-            console.info(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_INFO_PROCESSED_URL_SUCCESS}:[${jsonData.url}]`);
             panelBlasterPanel._activeChannel.setResolvedUrl(jsonData.url);
             panelBlasterPanel._activeChannel.setIsLive(jsonData.is_live);
             if (!Utils.isEmptyString(jsonData.duration)) panelBlasterPanel._activeChannel.setDuration(jsonData.duration);
@@ -390,7 +366,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
         stateLoadingChannel() {
             panelBlasterPanel._streamInfoPopup.stateLoading();
             panelBlasterPanel._controlsPopup.stateLoading();
-            console.info("Playing Link:[" + panelBlasterPanel._activeChannel._channelInfo.getUri() + "] Ytdl:[" + panelBlasterPanel._activeChannel._channelInfo.getUseYtdlp() + "]");
             panelBlasterPanel._settings.set_string(
                 Constants.SCHEMA_LAST_PLAYED,
                 panelBlasterPanel._activeChannel._channelInfo.getId(),
@@ -407,7 +382,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             if (panelBlasterPanel.channelBoxList.length === 0 || panelBlasterPanel._activeChannel === null)
                 return null;
             let activeChannelInfo = panelBlasterPanel._activeChannel._channelInfo;
-            //console.error(`Active channel order ${activeChannelInfo.getOrder()}`);
 
             for (let i = panelBlasterPanel.channelBoxList.length - 1; i >= 0; --i) {
                 let channelBox = panelBlasterPanel.channelBoxList[i];
@@ -419,7 +393,6 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             if (panelBlasterPanel.channelBoxList.length === 0 || panelBlasterPanel._activeChannel === null)
                 return null;
             let activeChannelInfo = panelBlasterPanel._activeChannel._channelInfo;
-            //console.error(`Active channel order ${activeChannelInfo.getOrder()}`);
 
             for (let i = 0; i < panelBlasterPanel.channelBoxList.length; ++i) {
                 let channelBox = panelBlasterPanel.channelBoxList[i];

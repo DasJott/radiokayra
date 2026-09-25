@@ -77,7 +77,6 @@ export const SearchYoutubePageHandler = class ChannelInfo {
     callBackSearchResultLine(searchString, line) {
         //{"channel:":"Lofi Girl", "url:":"https://www.youtube.com/watch?v=HuFYqnbVbzY", "title":"jazz lofi radio 🎷 beats to chill/study to","thumbnail":"https://i.ytimg.com/vi/HuFYqnbVbzY/maxresdefault.jpg", "is_live":True, "duration":"NA", "like_count":26470},
         try {
-            console.info(line);
             const act = new Adw.ActionRow();
             let youtubeVideoData = null;
             try { youtubeVideoData = JSON.parse(line); }

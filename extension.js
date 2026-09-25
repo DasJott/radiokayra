@@ -6,7 +6,6 @@ import * as PanelBlasterMenu from "./panelblastermenu.js";
 export default class PanelBlasterExtension extends Extension {
   constructor(metadata) {
     super(metadata);
-    //console.info(`constructing ${this.metadata.name}`);
   }
 
   enable() {

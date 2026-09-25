@@ -3,17 +3,15 @@ import Gio from "gi://Gio";
 import * as Constants from "./constants.js";
 
 export async function getShortChannelJson(channelBox, clientObject) {
-  try {    
+  try {
     //yt-dlp -x -O "{\"url\":\"%(urls)s\", \"thumbnail\":\"%(thumbnail)s\", \"is_live\":\"%(is_live)s\"}" https://www.youtube.com/watch?v=yZzBmNEZ1zw
     const proc = Gio.Subprocess.new(
       ["yt-dlp", "-x", "-O", "{\"url\":\"%(urls)s\", \"thumbnail\":\"%(thumbnail)s\", \"is_live\":\"%(is_live)s\", \"duration\":\"%(duration_string)s\"}", channelBox._channelInfo.uri],
       Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE,
     );
-    console.error(`URI: [${channelBox._channelInfo.uri}]`);
     const [stdout, stderr] = await proc.communicate_utf8_async(null, null);
-    
+
     if (proc.get_successful()) {
-      console.info("getShortChannelJson Wait Success:[" + stdout + "]");
       let jsonData = JSON.parse(stdout);
       clientObject.onShortChannelJsonSuccess(channelBox, jsonData);
     } else throw new Error(stderr);
@@ -38,15 +36,15 @@ export async function getFullChannelJson(id, uri, clientObject) {
 
     if (proc.get_successful()) {
       let channelData = JSON.parse(stdout);
-      
+
       clientObject.onFullChannelJsonReceived(id, channelData, null);
     } else throw new Error(stderr);
 
     return stdout;
-  } catch (error) {    
+  } catch (error) {
     clientObject.onFullChannelJsonReceived(id, null, error);
     return null;
-  }  
+  }
 }
 
 //Gio.Subprocess read each line
@@ -62,12 +60,12 @@ export async function searchYoutube(searchString, clientObject) {
       ],
       Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE,
     );
-        
+
     const stdoutStream = new Gio.DataInputStream({ base_stream: clientObject.proc.get_stdout_pipe(), close_base_stream: true });
-    readOutput(searchString, stdoutStream, clientObject, 1);    
+    readOutput(searchString, stdoutStream, clientObject, 1);
 
   } catch (error) {
-    console.error(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_SEARCH_YOUTUBE}:[${error}]`);
+    console.warn(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_SEARCH_YOUTUBE}:[${error}]`);
   }
 }
 
@@ -83,7 +81,6 @@ function readOutput(searchString, stdoutStream, clientObject, count) {
         }
         readOutput(searchString, stdoutStream, clientObject, count + 1);
       }
-      else { console.error(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_READ_OUTPUT}:[DONE]`); }
     } catch (error) { console.warn(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_READ_OUTPUT}:[${error}]`); }
   });
 }

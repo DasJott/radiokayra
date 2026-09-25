@@ -98,9 +98,7 @@ export const StationsPageHandler = class StationsPageHandler {
         });
         moveDownButton.get_style_context().add_class("circular");
         moveDownButton.connect("clicked", () => {
-            //this.moveDownChannel(channelInfo.id);
             this.moveDownChannel(row);
-            console.info("Move Down:[" + row.name + "]");
         });
         row.add_suffix(moveDownButton);
 
@@ -110,9 +108,7 @@ export const StationsPageHandler = class StationsPageHandler {
         });
         moveUpButton.get_style_context().add_class("circular");
         moveUpButton.connect("clicked", () => {
-            //this.moveUpChannel(channelInfo.id);
             this.moveUpChannel(row);
-            console.info("Move up:[" + row.name + "]");
         });
         row.add_suffix(moveUpButton);
 
@@ -170,14 +166,12 @@ export const StationsPageHandler = class StationsPageHandler {
 
     moveUpChannel(row) {
         let id = row.name;
-        console.error(`NEW CHANGES. MOVEUP ROW:[${row}] ID:[${id}]`);
         if (this._rows[0].name === id)
             return;  //This was the first row. Nothing to do
 
         for (let index = 1; index < this._channels.length; ++index) {
             let channelData = this._channels[index];
             if (channelData.id === id) {
-                console.error(`NEW CHANGES. MOVEUP FOUND ROW ID:[${id}]`);
                 let tempOrder = this._channels[index].order;
                 this._channels[index].order = this._channels[index - 1].order;
                 this._channels[index - 1].order = tempOrder;
@@ -328,8 +322,6 @@ export const StationsPageHandler = class StationsPageHandler {
             }
             else if (!this.channelExists(encodedUri))  //New channel, new Uri
                 this.addChannelInfo(Utils.uuidv4(), encodedName, encodedUri, useYtdlp);
-            else  //New channel but Uri already exists
-                console.info("New channel uri:[" + encodedUri + "] already exists");
 
             dialog.close();
         });
@@ -377,7 +369,7 @@ export const StationsPageHandler = class StationsPageHandler {
     }
     onFullChannelJsonReceived(id, channelData, error) {
         if (channelData === null) {
-            console.error(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_GET_FULL_JSON}:[${error}]`);
+            console.warn(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_GET_FULL_JSON}:[${error}]`);
             return;
         }
         let title = "";
