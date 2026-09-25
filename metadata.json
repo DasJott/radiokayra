@@ -1,7 +1,7 @@
 {
     "uuid": "panelblaster@dasjott.de",
     "name": "PanelBlaster",
-    "description": "A tray radio extension to listen, search and manage radio stations, Youtube videos. In app search a database of 53000 radio stations and youtube. IMPORTANT: Requires installation of yt-dlp and GStreamer.",
+    "description": "Crank up your GNOME panel! PanelBlaster turns the top bar into your personal ghettoblaster: play, search and organize radio stations and YouTube audio without leaving your desktop. Access a database of over 53,000 stations, queue up YouTube audio, and manage your favorites right from the tray. A revived fork of the seemingly unmaintained RadioKayra extension. IMPORTANT: Requires yt-dlp and GStreamer to be installed.",
     "shell-version": [
         "46",
         "47",
