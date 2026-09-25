@@ -191,11 +191,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             this._scrollViewMenuSection.actor.add_child(this._channelScrollView);
             this.menu.addMenuItem(this._scrollViewMenuSection);
-            this.addChannels().then(() => {
-                //If there is no previously played channel, pick the first one on the list (if any)
-                if (this._activeChannel === null && this.channelBoxList !== null && this.channelBoxList.length > 0)
-                    this._activeChannel = this.channelBoxList[0];
-            });
+            this.addChannels();
 
 
             //Channels Section END
@@ -263,6 +259,10 @@ export const PanelBlasterMenuButton = GObject.registerClass(
                     this._streamInfoPopup.showThumbnail(channelBox);
                 }
             }
+
+            // No saved channel matched: fall back to the first available one.
+            if (this._activeChannel === null && this.channelBoxList.length > 0)
+                this._activeChannel = this.channelBoxList[0];
         }
         _addToChannelSection(channelBox) {
             this._channelSection.addMenuItem(channelBox);
