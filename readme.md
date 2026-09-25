@@ -20,9 +20,11 @@
 
 PanelBlaster is a free and open source [Gnome](https://www.gnome.org/) desktop extension that plays your favorite music and podcast streams in the background.
 
+PanelBlaster is a fork of [Radio Kayra](https://github.com/ayhanavci/radiokayra) by [Ayhan Avcı](https://github.com/ayhanavci). Many thanks to the original author and contributors for their work!
+
 It utilizes [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [GStreamer](https://gstreamer.freedesktop.org/) for url/thumbnail resolving and audio playback respectively.
 
-<img src="./.readme/radiokayra.png" alt="Alt Text" width="40%" height="40%">
+<img src="./.readme/panelblaster.png" alt="Alt Text" width="40%" height="40%">
 
 # Requirements
 1. [Gnome 46,47, 48, 49, 50 or 51](https://gnome.org/)

@@ -132,6 +132,11 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             this.initRadioCallbacks();
 
+            //Stream Info Section
+            this._streamInfoPopup = new PopStreamInfo.StreamInfoPopup(this._player, this._path, this._settings, this._shellVersion);
+            this.menu.addMenuItem(this._streamInfoPopup);
+            //Stream Info Section END
+
             //Controls Section
             this._controlsPopup = new PopControls.ControlsPopup(this._shellVersion);
             this.menu.addMenuItem(this._controlsPopup);
@@ -141,13 +146,8 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             //Volume Section
             this._volumeControlPopup = new PopVolumeControl.VolumeControlPopup(this._player, this._settings, this._shellVersion);
             this.menu.addMenuItem(this._volumeControlPopup);
-            //Volume Section END
-
-            //Stream Info Section
-            this._streamInfoPopup = new PopStreamInfo.StreamInfoPopup(this._player, this._path, this._settings, this._shellVersion);
-            this.menu.addMenuItem(this._streamInfoPopup);
             this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-            //Stream Info Section END
+            //Volume Section END
 
             this._tooltip.text = "";
 
