@@ -46,7 +46,11 @@ export const StationsPageHandler = class StationsPageHandler {
     async populateChannels() {
         this._channelsReadWrite = new Channels.ChannelsReadWrite(this.path);
         this._channels = await this._channelsReadWrite.getChannels();
-        if (this._channels === null) this._channels = [];
+        if (this._channels === null) {
+            // Loading failed: keep _channels null so editing stays disabled and the file is not overwritten.
+            console.error(`${Constants.LOG_PREFIX_PREPS} ${Constants.LOG_FAILED_TO_LOAD_JSON}`);
+            return;
+        }
         this._channels.sort((a, b) => parseInt(a.order) - parseInt(b.order));
 
         for (let index = 0; index < this._channels.length; ++index) {
@@ -204,6 +208,11 @@ export const StationsPageHandler = class StationsPageHandler {
 
 
     openEditWindow(row) {
+        if (this._channels === null || this._channels === undefined) {
+            console.error(`${Constants.LOG_PREFIX_PREPS} ${Constants.LOG_FAILED_TO_LOAD_JSON}`);
+            return;
+        }
+
         let id = null;
         if (row !== null) id = row.name;
 
