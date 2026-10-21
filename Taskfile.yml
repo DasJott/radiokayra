@@ -33,6 +33,15 @@ tasks:
           .
       - echo "...done packing!"
 
+  install:
+    desc: Install the extension on this system from the packed bundle (left disabled)
+    deps: [pack]
+    silent: true
+    cmds:
+      - echo "installing..."
+      - gnome-extensions install --force "{{.BUNDLE}}"
+      - echo "...installed! Enable it with 'gnome-extensions enable {{.UUID}}' after restarting GNOME Shell."
+
   lint:
     desc: Validate the packed bundle with shexli, catching review issues early
     deps: [pack, _shexli-venv]

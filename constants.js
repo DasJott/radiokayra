@@ -34,9 +34,9 @@ export const CSS_LOADING_LAYOUT = "panelblaster-popup-loading-box";
 export const CSS_ICON_PLAY_BUTTON = "play-button-icon";
 export const CSS_CHANNEL_NAME_LABEL = "channel-name-label";
 
-export const ICON_RADIO_ON_PATH = "/images/radio-icon-on.svg";
-export const ICON_RADIO_OFF_PATH = "/images/radio-icon-off.svg";
-export const ICON_RADIO_ON_AIR_PATH = "/images/radio-live-symbolic.svg";
+export const ICON_RADIO_ON_PATH = "/images/on-symbolic.svg";
+export const ICON_RADIO_OFF_PATH = "/images/off-symbolic.svg";
+export const ICON_RADIO_ON_AIR_PATH = "/images/live-symbolic.svg";
 export const ICON_CHANNEL_THUMB_PLACEHOLDER = "audio-x-generic-symbolic";
 export const ICON_VOLUME_MUTED = "audio-volume-muted-symbolic";
 export const ICON_VOLUME_LOW = "audio-volume-low-symbolic";
