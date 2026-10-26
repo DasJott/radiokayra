@@ -14,7 +14,7 @@ import { gettext as _, } from "resource:///org/gnome/shell/extensions/extension.
 
 export const StreamInfoPopup = GObject.registerClass(
     {
-        GTypeName: "StreamInfoPopup",
+        GTypeName: "PanelBlasterStreamInfoPopup",
     },
     class extends PopupMenu.PopupBaseMenuItem {
         constructor(player, extensionPath, settings, shellVersion) {

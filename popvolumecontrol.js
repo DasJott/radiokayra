@@ -10,7 +10,7 @@ import { gettext as _, } from "resource:///org/gnome/shell/extensions/extension.
 
 export const VolumeControlPopup = GObject.registerClass(
     {
-        GTypeName: "VolumeControlPopup",
+        GTypeName: "PanelBlasterVolumeControlPopup",
     },
     class extends PopupMenu.PopupBaseMenuItem {
         constructor(player, settings, shellVersion) {

@@ -8,7 +8,7 @@ import { gettext as _, } from "resource:///org/gnome/shell/extensions/extension.
 
 export const ControlsPopup = GObject.registerClass(
     {
-        GTypeName: "ControlsPopup",
+        GTypeName: "PanelBlasterControlsPopup",
     },
     class extends PopupMenu.PopupBaseMenuItem {
         constructor(shellVersion) {
