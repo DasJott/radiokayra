@@ -22,8 +22,9 @@ export const AboutPageHandler = class AboutPageHandler {
 
         this._window.add(this._aboutPage);
         this._rows = [];
-        let title_text = 'PanelBlaster v2.2\n';
-        title_text += _('A foss hobby project by Ayhan Avcı (2024-2025)');
+        let title_text = 'PanelBlaster v1.0\n';
+        title_text += _('A foss hobby project by DasJott\n');
+        title_text += _('continued from Ayhan Avcı (2024-2025).');
 
         this.about = new Adw.PreferencesGroup({ title: title_text, description: _("Mid clicking the radio icon toggles play / stop.\nDon't forget to install yt-dlp &amp; gstreamer. Links at the bottom. Enjoy!")});
         this._aboutPage.add(this.about);
@@ -45,9 +46,9 @@ export const AboutPageHandler = class AboutPageHandler {
         row.title = _("Extension");
         newLink = new Gtk.LinkButton({
           valign: Gtk.Align.CENTER,
-          label: "https://extensions.gnome.org/extension/7649/radio-kayra/",
+          label: "https://extensions.gnome.org/extension/75513/panelblaster",
           focusable: 1,
-          uri: "https://extensions.gnome.org/extension/7649/radio-kayra/"
+          uri: "https://extensions.gnome.org/extension/75513/panelblaster"
         });
         row.add_suffix(newLink);
         this._urlsGroup.add(row);
