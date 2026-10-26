@@ -23,12 +23,12 @@ export const VolumeControlPopup = GObject.registerClass(
             this._settings = settings;
             this._volume = this._settings.get_double(Constants.SCHEMA_VOLUME_LEVEL);
             this._saved_volume = this._volume;
-            this._volumeLayout = new St.BoxLayout(); 
+            this._volumeLayout = new St.BoxLayout();
             this._volumeLayout.style_class = "layout-box";
             //Gnome 48 or below?
-            if (shellVersion < 48) this._volumeLayout.vertical = false;            
+            if (shellVersion < 48) this._volumeLayout.vertical = false;
             else this._volumeLayout.orientation = Clutter.Orientation.HORIZONTAL;
-                     
+
             this._slider = new Slider.Slider(this._volume);
             this._slider_value_handler = this._slider.connect("notify::value", this.setVolume.bind(this));
             this._mute_icon = new St.Icon({
@@ -41,11 +41,11 @@ export const VolumeControlPopup = GObject.registerClass(
 
             this._volumeLayout.add_child(this._mute_icon);
             this._volumeLayout.add_child(this._slider);
-            
+
             this.add_child(this._volumeLayout);
             this.setVolumeIcon();
-            
-        }        
+
+        }
         clear() {
             this._volumeLayout?.destroy();
             this._volumeLayout = null;
@@ -59,7 +59,7 @@ export const VolumeControlPopup = GObject.registerClass(
             this._mute_icon = null;
 
         }
-        
+
         setVolume(slider, _event) {
             this._player.setVolume(slider.value);
             this._volume = slider.value;

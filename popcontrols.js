@@ -18,17 +18,17 @@ export const ControlsPopup = GObject.registerClass(
                 can_focus: true,
             });
             this._play_click_handler = null;
-            this._controlsLayout = new St.BoxLayout({                
+            this._controlsLayout = new St.BoxLayout({
                 x_align: Clutter.ActorAlign.CENTER,
                 x_expand: true,
-                //width: Constants.DEFAULT_PANEL_WIDTH,                                
-            });  
+                //width: Constants.DEFAULT_PANEL_WIDTH,
+            });
             //Gnome 48 or below? //Alternative: this._controlsLayout.orientation === undefined
-            if (shellVersion < 48) this._controlsLayout.vertical = false;                                            
-            else this._controlsLayout.orientation = Clutter.Orientation.HORIZONTAL;                      
-                        
+            if (shellVersion < 48) this._controlsLayout.vertical = false;
+            else this._controlsLayout.orientation = Clutter.Orientation.HORIZONTAL;
+
             this.add_child(this._controlsLayout);
-            
+
             this._previousbutton = new St.Icon({
                 icon_name: Constants.ICON_BACKWARD,
                 reactive: true,
@@ -38,7 +38,7 @@ export const ControlsPopup = GObject.registerClass(
             });
 
             this._controlsLayout.add_child(this._previousbutton);
-            
+
             this._playbutton = new St.Icon({
                 icon_name: Constants.ICON_PLAY,
                 reactive: true,
@@ -56,12 +56,12 @@ export const ControlsPopup = GObject.registerClass(
                 x_align: Clutter.ActorAlign.END,
                 x_expand: false,
             });
-            
+
             this._controlsLayout.add_child(this._nextbutton);
 
             this.add_child(this._controlsLayout);
         }
-      
+
         clear() {
             if (this._play_click_handler !== null)
                 this.disconnect(this._play_click_handler);
@@ -83,10 +83,10 @@ export const ControlsPopup = GObject.registerClass(
             //Uncomment to make only the button clickable
             this._playbutton.connect("button-press-event", () => onPlayClicked());
         }
-        setOnPlayNextClicked(onPlayNextClicked) {            
+        setOnPlayNextClicked(onPlayNextClicked) {
             this._nextbutton.connect("button-press-event", () => onPlayNextClicked());
         }
-        setOnPlayPrevClicked(onPlayPrevClicked) {            
+        setOnPlayPrevClicked(onPlayPrevClicked) {
             this._previousbutton.connect("button-press-event", () => onPlayPrevClicked());
         }
     },
