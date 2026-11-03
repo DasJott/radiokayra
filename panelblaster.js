@@ -102,10 +102,10 @@ export const RadioPlayer = class RadioPlayer {
         break;
       case Gst.MessageType.ERROR:
         {
-          let error, debug_msg = message.parse_error();
-          console.warn(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_ERROR_GST_MESSAGE}: [${error}] [${debug_msg}]`);
+          let [error, debug_msg] = message.parse_error();
+          console.warn(`${Constants.LOG_PREFIX_RADIO_PLAYER} ${Constants.LOG_ERROR_GST_MESSAGE}: [${error.message}] [${debug_msg}]`);
           this.stop();
-          if (this.onError !== null) this.onError(2, error + " " + debug_msg);
+          if (this.onError !== null) this.onError(2, error.message + " " + debug_msg);
           break;
         }
       default:

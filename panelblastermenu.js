@@ -287,7 +287,12 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             panelBlasterPanel.setTrayIconStopped();
             panelBlasterPanel.stateReady();
         }
-        onPlayerError(type, message) { console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_PLAYER_ERROR} [${type}] [${message}]`); }
+        onPlayerError(type, message) {
+            console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_PLAYER_ERROR} [${type}] [${message}]`);
+            // Player is stopped on error; don't leave the UI in the loading state.
+            panelBlasterPanel.setTrayIconStopped();
+            panelBlasterPanel.stateReady();
+        }
         onPlayerTagChanged(artist, title) {
             panelBlasterPanel._streamInfoPopup.onNewTag(artist, title);
             panelBlasterPanel.updateToolTip();
