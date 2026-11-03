@@ -160,12 +160,12 @@ msgstr ""
 "Bei Sekundärklick des Radiosymbols Titel in die Zwischenablage kopieren."
 
 #: prefssettingsspage.js:59
-msgid "Panel Height"
-msgstr "Höhe des Bereichs"
+msgid "Max Panel Height"
+msgstr "Maximale Höhe des Bereichs"
 
 #: prefssettingsspage.js:60
-msgid "The height of the extension window when opened."
-msgstr "Höhe des Erweiterungsfensters"
+msgid "The maximum number of stations shown in the popup before a scrollbar appears."
+msgstr "Maximale Anzahl Sender im Popup, bevor eine Bildlaufleiste erscheint."
 
 #: prefssettingsspage.js:69
 msgid "Gnome Search Support"

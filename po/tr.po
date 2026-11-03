@@ -156,12 +156,12 @@ msgid ""
 msgstr "Radyo ikonuna sağ tıkladığında şarkı adını kopyalar."
 
 #: prefssettingsspage.js:59
-msgid "Panel Height"
-msgstr "Panel uzunluğu"
+msgid "Max Panel Height"
+msgstr "En fazla panel uzunluğu"
 
 #: prefssettingsspage.js:60
-msgid "The height of the extension window when opened."
-msgstr "Pencere açıldığındaki yükseklik."
+msgid "The maximum number of stations shown in the popup before a scrollbar appears."
+msgstr "Kaydırma çubuğu görünmeden önce açılır pencerede gösterilen en fazla istasyon sayısı."
 
 #: prefssettingsspage.js:69
 msgid "Gnome Search Support"

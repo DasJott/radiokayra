@@ -56,12 +56,12 @@ export const SettingsPageHandler = class SettingsPageHandler {
         //CLICK NOW PLAYING TO COPY SONG
 
         this._panel_height_spin = new Adw.SpinRow({
-            title: _("Panel Height"),
-            subtitle: _("The height of the extension window when opened."),
+            title: _("Max Panel Height"),
+            subtitle: _("The maximum number of stations shown in the popup before a scrollbar appears."),
             adjustment: new Gtk.Adjustment({
-                lower: 100,
-                upper: 700,
-                step_increment: 5
+                lower: 1,
+                upper: 50,
+                step_increment: 1
             })
         });
         //GNOME SEARCH

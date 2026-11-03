@@ -147,11 +147,11 @@ msgid ""
 msgstr ""
 
 #: prefssettingsspage.js:59
-msgid "Panel Height"
+msgid "Max Panel Height"
 msgstr ""
 
 #: prefssettingsspage.js:60
-msgid "The height of the extension window when opened."
+msgid "The maximum number of stations shown in the popup before a scrollbar appears."
 msgstr ""
 
 #: prefssettingsspage.js:69

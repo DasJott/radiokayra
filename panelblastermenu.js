@@ -33,6 +33,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             this._settings.disconnect(this._settings_settings_changed_handler);
             this._settingsMenuItem.disconnect(this._settings_menu_activate_handler);
+            this._settings.disconnect(this._height_changed_handler);
 
             this.setTrayIconStopped();
             this._controlsPopup.clear();
@@ -176,13 +177,13 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             this._channelScrollView = new St.ScrollView({ overlay_scrollbars: true, });
 
             this._channelScrollView.add_child(this._channelSection.actor);
-            let newHeight = panelBlasterPanel._settings.get_int(Constants.SCHEMA_PANEL_HEIGHT);
-            this._channelScrollView.set_height(newHeight);
 
             //PANEL HEIGHT EVENT
             this._height_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_PANEL_HEIGHT, () => {
-                newHeight = panelBlasterPanel._settings.get_int(Constants.SCHEMA_PANEL_HEIGHT);
-                this._channelScrollView.set_height(newHeight);
+                this._updateChannelListHeight();
+            });
+            this._menu_open_handler = this.menu.connect("open-state-changed", (_menu, open) => {
+                if (open) this._updateChannelListHeight();
             });
             //PANEL HEIGHT EVENT
 
@@ -259,6 +260,18 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             // No saved channel matched: fall back to the first available one.
             if (this._activeChannel === null && this.channelBoxList.length > 0)
                 this._activeChannel = this.channelBoxList[0];
+
+            this._updateChannelListHeight();
+        }
+        _updateChannelListHeight() {
+            if (!this._channelScrollView || this.channelBoxList.length === 0) return;
+
+            // Row height is only measurable once the items have a theme node.
+            const rowHeight = this.channelBoxList[0].get_preferred_height(-1)[1];
+            if (!(rowHeight > 0)) return;
+
+            const maxStations = this._settings.get_int(Constants.SCHEMA_PANEL_HEIGHT);
+            this._channelScrollView.style = `max-height: ${Math.round(rowHeight * maxStations)}px;`;
         }
         _addToChannelSection(channelBox) {
             this._channelSection.addMenuItem(channelBox);

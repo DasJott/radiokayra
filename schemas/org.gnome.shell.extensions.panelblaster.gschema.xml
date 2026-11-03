@@ -16,10 +16,10 @@
       <summary>Volume Level</summary>
       <description></description>
     </key>
-    <key name="panelheight" type="i">
-      <default>300</default>
-      <summary>Panel Height</summary>
-      <description></description>
+    <key name="maxpanelstations" type="i">
+      <default>8</default>
+      <summary>Max Panel Height</summary>
+      <description>Maximum number of stations shown in the popup before a scrollbar appears.</description>
     </key>
     <key name="showsongtooltip" type="b">
         <default>true</default>
