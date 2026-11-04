@@ -3,7 +3,7 @@ import Gtk from "gi://Gtk";
 import GLib from 'gi://GLib';
 import Gio from "gi://Gio";
 import Gdk from 'gi://Gdk';
-import Soup from 'gi://Soup?version=3.0';
+import Soup from 'gi://Soup';
 import * as Utils from "./utils.js";
 import * as Constants from "./constants.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";

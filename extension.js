@@ -3,6 +3,21 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import Gio from "gi://Gio";
 import * as PanelBlasterMenu from "./panelblastermenu.js";
 
+//Code blob to make gio subprocesses work. Recommended in gnome matrix chat.
+/* Gio.Subprocess */
+Gio._promisify(Gio.Subprocess.prototype, "communicate_async");
+Gio._promisify(Gio.Subprocess.prototype, "communicate_utf8_async");
+Gio._promisify(Gio.Subprocess.prototype, "wait_async");
+Gio._promisify(Gio.Subprocess.prototype, "wait_check_async");
+
+/* Ancillary Methods */
+Gio._promisify(
+    Gio.DataInputStream.prototype,
+    "read_line_async",
+    "read_line_finish_utf8",
+);
+Gio._promisify(Gio.OutputStream.prototype, "write_bytes_async");
+
 export default class PanelBlasterExtension extends Extension {
   constructor(metadata) {
     super(metadata);
@@ -20,17 +35,3 @@ export default class PanelBlasterExtension extends Extension {
   }
 }
 
-//Code blob to make gio subprocesses work. Recommended in gnome matrix chat.
-/* Gio.Subprocess */
-Gio._promisify(Gio.Subprocess.prototype, "communicate_async");
-Gio._promisify(Gio.Subprocess.prototype, "communicate_utf8_async");
-Gio._promisify(Gio.Subprocess.prototype, "wait_async");
-Gio._promisify(Gio.Subprocess.prototype, "wait_check_async");
-
-/* Ancillary Methods */
-Gio._promisify(
-    Gio.DataInputStream.prototype,
-    "read_line_async",
-    "read_line_finish_utf8",
-);
-Gio._promisify(Gio.OutputStream.prototype, "write_bytes_async");
