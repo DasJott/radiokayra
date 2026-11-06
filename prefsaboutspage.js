@@ -22,7 +22,7 @@ export const AboutPageHandler = class AboutPageHandler {
 
         this._window.add(this._aboutPage);
         this._rows = [];
-        let title_text = 'PanelBlaster v1.0\n';
+        let title_text = 'PanelBlaster v3\n';
         title_text += _('A foss hobby project by DasJott\n');
         title_text += _('continued from Ayhan Avcı (2024-2025).');
 
@@ -46,9 +46,9 @@ export const AboutPageHandler = class AboutPageHandler {
         row.title = _("Extension");
         newLink = new Gtk.LinkButton({
           valign: Gtk.Align.CENTER,
-          label: "https://extensions.gnome.org/extension/75513/panelblaster",
+          label: "https://extensions.gnome.org/extension/11059/panelblaster",
           focusable: 1,
-          uri: "https://extensions.gnome.org/extension/75513/panelblaster"
+          uri: "https://extensions.gnome.org/extension/11059/panelblaster"
         });
         row.add_suffix(newLink);
         this._urlsGroup.add(row);
