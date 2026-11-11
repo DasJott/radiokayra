@@ -38,13 +38,13 @@ export default class PanelBlasterPreferences extends ExtensionPreferences {
     this._stationsPageHandler = new StationsPageHandler.StationsPageHandler(this);
     this._stationsPageHandler.createPage();
 
-    //Youtube Search
-    this._searchYoutubePageHandler = new SearchYoutubePageHandler.SearchYoutubePageHandler(this);
-    this._searchYoutubePageHandler.createPage();
-
     //Radio Search
     this._searchRadioPageHandler = new SearchRadioPageHandler.SearchRadioPageHandler(this);
     this._searchRadioPageHandler.createPage();
+
+    //Youtube Search
+    this._searchYoutubePageHandler = new SearchYoutubePageHandler.SearchYoutubePageHandler(this);
+    this._searchYoutubePageHandler.createPage();
 
     //Settings
     this._settingsPageHandler = new SettingsPageHandler.SettingsPageHandler(this);
