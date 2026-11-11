@@ -53,9 +53,12 @@ export async function searchYoutube(searchString, clientObject) {
     const proc = Gio.Subprocess.new(
       [
         "yt-dlp",
-        "ytsearch100:" + "'" + searchString + "'",
+        "ytsearch" + Constants.MAX_YOUTUBE_SEARCH_RESULTS + ":" + searchString,
         "-O",
-        "{\"channel\":\"%(channel)s\", \"url\":\"%(original_url)s\", \"title\":\"%(fulltitle)s\",\"thumbnail\":\"%(thumbnail)s\", \"is_live\":\"%(is_live)s\", \"duration\":\"%(duration_string)s\", \"like_count\":%(like_count)d}",
+        // %(x|"NA")j emits a correctly escaped JSON string (titles with quotes or backslashes used to break the
+        // JSON) and falls back to "NA" for missing fields. A missing like_count used to print a bare NA, which
+        // is invalid JSON, so such videos were dropped; it now falls back to 0.
+        "{\"channel\":%(channel|\"NA\")j, \"url\":%(original_url|\"NA\")j, \"title\":%(fulltitle|\"NA\")j, \"thumbnail\":%(thumbnail|\"\")j, \"is_live\":\"%(is_live)s\", \"duration\":%(duration_string|\"NA\")j, \"like_count\":%(like_count|0)d}",
         "--skip-download"
       ],
       Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE,

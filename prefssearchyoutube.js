@@ -1,11 +1,13 @@
 import Adw from "gi://Adw";
 import Gtk from "gi://Gtk";
 import Gio from "gi://Gio";
+import GLib from "gi://GLib";
 import Gdk from 'gi://Gdk';
 import * as Utils from "./utils.js";
 import * as YtdlpHandler from "./ytdlphandler.js";
 import * as Constants from "./constants.js";
 import { SearchAddButton } from "./searchaddbutton.js";
+import { SearchDebouncer } from "./searchdebounce.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const SearchYoutubePageHandler = class ChannelInfo {
@@ -16,6 +18,8 @@ export const SearchYoutubePageHandler = class ChannelInfo {
         this._addButtons = [];
     }
     clear() {
+        this._searchDebouncer?.clear();
+        this._searchDebouncer = null;
         // Don't leave yt-dlp running after the settings window is closed.
         try { this.proc?.force_exit(); } catch (e) { /* already finished */ }
         this.proc = null;
@@ -26,6 +30,44 @@ export const SearchYoutubePageHandler = class ChannelInfo {
         this.searchPage.icon_name = Constants.ICON_YOUTUBE_SEARCH_PAGE;
         this.window.add(this.searchPage);
 
+        this.buildContent();
+    }
+    // Shows the search, or a hint if yt-dlp (required for everything YouTube) is missing.
+    buildContent() {
+        for (const group of [this.searchGroup, this.searchResults, this.warningGroup]) {
+            if (group) this.searchPage.remove(group);
+        }
+        this.searchGroup = null;
+        this.searchResults = null;
+        this.warningGroup = null;
+        this._searchDebouncer?.clear();
+        this._searchDebouncer = null;
+        this._addButtons = [];
+
+        if (GLib.find_program_in_path("yt-dlp") === null) this.buildMissingYtdlpWarning();
+        else this.buildSearch();
+    }
+    buildMissingYtdlpWarning() {
+        this.warningGroup = new Adw.PreferencesGroup();
+        this.warningGroup.title = _("yt-dlp required");
+
+        const row = new Adw.ActionRow({
+            title: _("yt-dlp is not installed"),
+            subtitle: _("Install yt-dlp with your package manager and make sure it is in your PATH to search for and play YouTube videos."),
+        });
+        row.add_prefix(new Gtk.Image({ icon_name: Constants.ICON_WARNING }));
+
+        const recheckButton = new Gtk.Button({
+            valign: Gtk.Align.CENTER,
+            label: _("Check again"),
+        });
+        recheckButton.connect('clicked', () => this.buildContent());
+        row.add_suffix(recheckButton);
+
+        this.warningGroup.add(row);
+        this.searchPage.add(this.warningGroup);
+    }
+    buildSearch() {
         this.searchGroup = new Adw.PreferencesGroup();
         this.searchGroup.title = _("Search");
         this.searchEntry = new Gtk.Entry({
@@ -51,14 +93,17 @@ export const SearchYoutubePageHandler = class ChannelInfo {
         this.searchButton.connect('clicked', () => this.createSearchResult());
         this.searchEntry.connect('activate', () => this.createSearchResult());
 
+        // Search automatically once the user stopped typing.
+        this._searchDebouncer = new SearchDebouncer(this.searchEntry, () => this.createSearchResult());
+
         hbox.append(this.searchEntry);
         hbox.append(this.searchButton);
 
         this.searchGroup.add(hbox);
         this.searchPage.add(this.searchGroup);
-
     }
     createSearchResult() {
+        this._searchDebouncer?.cancel(); //Explicit search (Enter/button) replaces a pending automatic one
         if (this.searchEntry.get_text().trim().length === 0) return;
         if (this.searchResults)
             this.searchPage.remove(this.searchResults);

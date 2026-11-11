@@ -11,6 +11,7 @@ export const PLAY_PREV_ICON_SIZE = 40;
 export const PLAY_NEXT_ICON_SIZE = 40;
 
 export const MAX_YOUTUBE_SEARCH_RESULTS = 30;
+export const SEARCH_DELAY_MS = 1200; //Search starts this long after the user stopped typing
 export const MAX_RADIO_SEARCH_RESULTS = 30;
 export const MAX_RADIO_SEARCH_RETRIES = 3;
 
@@ -57,6 +58,7 @@ export const ICON_SETTINGS = "emblem-system-symbolic";
 export const ICON_STATIONS_PAGE = "open-menu-symbolic";
 export const ICON_DELETE_CHANNEL = "user-trash-symbolic";
 export const ICON_EDIT_CHANNEL = "document-edit-symbolic";
+export const ICON_WARNING = "dialog-warning-symbolic";
 export const ICON_ABOUT = "help-about-symbolic";
 
 export const LOG_PREFIX_CHANNELS = "Channels";

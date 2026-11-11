@@ -7,6 +7,7 @@ import Soup from 'gi://Soup';
 import * as Utils from "./utils.js";
 import * as Constants from "./constants.js";
 import { SearchAddButton } from "./searchaddbutton.js";
+import { SearchDebouncer } from "./searchdebounce.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const SearchRadioPageHandler = class ChannelInfo {
@@ -21,6 +22,8 @@ export const SearchRadioPageHandler = class ChannelInfo {
         this.setServer();
     }
     clear() {
+        this._searchDebouncer?.clear();
+        this._searchDebouncer = null;
         this._httpSession = null;
     }
     createPage() {
@@ -54,6 +57,9 @@ export const SearchRadioPageHandler = class ChannelInfo {
         this._search_button_click_handler = this._searchButton.connect('clicked', () => this.createSearchResult());
         this._search_entry_click_handler = this._searchEntry.connect('activate', () => this.createSearchResult());
 
+        // Search automatically once the user stopped typing.
+        this._searchDebouncer = new SearchDebouncer(this._searchEntry, () => this.createSearchResult());
+
         hbox.append(this._searchEntry);
         hbox.append(this._searchButton);
 
@@ -62,6 +68,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
 
     }
     createSearchResult() {
+        this._searchDebouncer?.cancel(); //Explicit search (Enter/button) replaces a pending automatic one
         if (this.searchResults) this._searchPage.remove(this.searchResults);
         this._addButtons = [];
         this._searchToken = {}; //Identifies the current search; older responses are dropped
