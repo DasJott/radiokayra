@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 12:53+0200\n"
+"POT-Creation-Date: 2026-11-11 14:24+0100\n"
 "PO-Revision-Date: 2025-06-05 14:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,15 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.6\n"
 
-#: panelblastermenu.js:164 prefssettingsspage.js:22
+#: panelblastermenu.js:167 prefssettingsspage.js:22
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: popstreaminfo.js:188
-msgid "Loading..."
-msgstr "Laden …"
-
-#: popstreaminfo.js:198
+#: popstreaminfo.js:204
 msgid "Ready..."
 msgstr "Bereit …"
 
@@ -35,13 +30,14 @@ msgid "About"
 msgstr "Info"
 
 #: prefsaboutspage.js:26
-#, fuzzy
-msgid "A foss hobby project by Ayhan Avcı (2024-2025)"
-msgstr ""
-"PanelBlaster v2.0\n"
-"Ein FOSS-Hobby-Projekt von Ayhan Avcı (2024–2025)"
+msgid "A foss hobby project by DasJott\n"
+msgstr "Ein FOSS-Hobbyprojekt von DasJott\n"
 
-#: prefsaboutspage.js:28
+#: prefsaboutspage.js:27
+msgid "continued from Ayhan Avcı (2024-2025)."
+msgstr "Fortgeführt von Ayhan Avcı (2024–2025)."
+
+#: prefsaboutspage.js:29
 msgid ""
 "Mid clicking the radio icon toggles play / stop.\n"
 "Don't forget to install yt-dlp &amp; gstreamer. Links at the bottom. Enjoy!"
@@ -50,81 +46,100 @@ msgstr ""
 "Nicht vergessen, yt-dlp und gstreamer zu installieren. Verweise unten. Viel "
 "Spaß!"
 
-#: prefsaboutspage.js:31
+#: prefsaboutspage.js:32
 msgid "Links"
 msgstr "Verweise"
 
-#: prefsaboutspage.js:34
+#: prefsaboutspage.js:35
 msgid "Project"
 msgstr "Projekt"
 
-#: prefsaboutspage.js:45
+#: prefsaboutspage.js:46
 msgid "Extension"
 msgstr "Erweiterung"
 
-#: prefsaboutspage.js:56
-#, fuzzy
+#: prefsaboutspage.js:57
 msgid "yt-dlp"
 msgstr "yt-dlp"
 
-#: prefsaboutspage.js:67
+#: prefsaboutspage.js:68
 msgid "GStreamer"
 msgstr "GStreamer"
 
-#: prefssearchradio.js:26
+#: prefssearchradio.js:31
 msgid "Radio"
 msgstr "Radio"
 
-#: prefssearchradio.js:31 prefssearchradio.js:41 prefssearchyoutube.js:26
-#: prefssearchyoutube.js:36
+#: prefssearchradio.js:36 prefssearchradio.js:46 prefssearchyoutube.js:72
+#: prefssearchyoutube.js:82
 msgid "Search"
 msgstr "Suchen"
 
-#: prefssearchradio.js:35
+#: prefssearchradio.js:40
 msgid "Channel name"
 msgstr "Sendername"
 
-#: prefssearchradio.js:65 prefssearchyoutube.js:62
+#: prefssearchradio.js:76 prefssearchyoutube.js:113
 msgid "Search Results"
 msgstr "Suchergebnisse"
 
-#: prefssearchradio.js:158
+#: prefssearchradio.js:172
 msgid "Country: "
 msgstr "Land: "
 
-#: prefssearchradio.js:159
+#: prefssearchradio.js:173
 msgid "Tags: "
 msgstr "Schlüsselwörter: "
 
-#: prefssearchradio.js:160 prefssearchyoutube.js:93
+#: prefssearchradio.js:174 prefssearchyoutube.js:143
 msgid "Link: "
 msgstr "Verweis: "
 
-#: prefssearchradio.js:161
+#: prefssearchradio.js:175
 msgid "Codec: "
 msgstr "Codec: "
 
-#: prefssearchradio.js:162
+#: prefssearchradio.js:176
 msgid "Bitrate: "
 msgstr "Bitrate: "
 
-#: prefssearchyoutube.js:21
+#: prefssearchyoutube.js:29
 msgid "Youtube"
 msgstr "Youtube"
 
-#: prefssearchyoutube.js:30
+#: prefssearchyoutube.js:52
+msgid "yt-dlp required"
+msgstr "yt-dlp erforderlich"
+
+#: prefssearchyoutube.js:55
+msgid "yt-dlp is not installed"
+msgstr "yt-dlp ist nicht installiert"
+
+#: prefssearchyoutube.js:56
+msgid ""
+"Install yt-dlp with your package manager and make sure it is in your PATH to "
+"search for and play YouTube videos."
+msgstr ""
+"yt-dlp über die Paketverwaltung installieren und sicherstellen, dass es im "
+"PATH verfügbar ist, um YouTube-Videos zu suchen und abzuspielen."
+
+#: prefssearchyoutube.js:62
+msgid "Check again"
+msgstr "Erneut prüfen"
+
+#: prefssearchyoutube.js:76
 msgid "Video name"
 msgstr "Videoname"
 
-#: prefssearchyoutube.js:92
+#: prefssearchyoutube.js:142
 msgid "Likes: "
 msgstr "Likes: "
 
-#: prefssearchyoutube.js:94
+#: prefssearchyoutube.js:144
 msgid "Is Live: "
-msgstr "Is Live: "
+msgstr "Live: "
 
-#: prefssearchyoutube.js:95
+#: prefssearchyoutube.js:145
 msgid "Duration: "
 msgstr "Dauer: "
 
@@ -149,22 +164,23 @@ msgstr ""
 
 #: prefssettingsspage.js:51
 msgid "Copy Song on Click"
-msgstr ""
+msgstr "Titel per Klick kopieren"
 
 #: prefssettingsspage.js:52
-#, fuzzy
 msgid ""
 "Copies the artist and song title to clipboard when you click the now playing "
 "area."
 msgstr ""
-"Bei Sekundärklick des Radiosymbols Titel in die Zwischenablage kopieren."
+"Kopiert Interpret und Titel in die Zwischenablage, wenn der Bereich der "
+"aktuellen Wiedergabe angeklickt wird."
 
 #: prefssettingsspage.js:59
 msgid "Max Panel Height"
 msgstr "Maximale Höhe des Bereichs"
 
 #: prefssettingsspage.js:60
-msgid "The maximum number of stations shown in the popup before a scrollbar appears."
+msgid ""
+"The maximum number of stations shown in the popup before a scrollbar appears."
 msgstr "Maximale Anzahl Sender im Popup, bevor eine Bildlaufleiste erscheint."
 
 #: prefssettingsspage.js:69
@@ -180,47 +196,45 @@ msgid "Stations"
 msgstr "Sender"
 
 #: prefsstationspage.js:24
-#, fuzzy
 msgid "Add, edit and delete radio stations and channels."
-msgstr "Radiosender hinzufügen, bearbeiten und löschen"
+msgstr "Radiosender und Kanäle hinzufügen, bearbeiten und löschen."
 
 #: prefsstationspage.js:32
-#, fuzzy
 msgid "Stations and Channels"
-msgstr "Radiosender"
+msgstr "Sender und Kanäle"
 
-#: prefsstationspage.js:218
+#: prefsstationspage.js:236
 msgid "Add a New Channel"
 msgstr "Sender hinzufügen"
 
-#: prefsstationspage.js:218
+#: prefsstationspage.js:236
 msgid "Edit Channel"
 msgstr "Sender bearbeiten"
 
-#: prefsstationspage.js:236
+#: prefsstationspage.js:254
 msgid "Channel URL:"
 msgstr "Senderadresse:"
 
-#: prefsstationspage.js:260
+#: prefsstationspage.js:278
 msgid "Channel Name:"
 msgstr "Sendername:"
 
-#: prefsstationspage.js:270
+#: prefsstationspage.js:288
 msgid "Fetch from url"
 msgstr "Der Adresse entnehmen"
 
-#: prefsstationspage.js:292
-#, fuzzy
+#: prefsstationspage.js:310
 msgid "Use yt-dlp"
-msgstr "yt-dlp verwenden?"
+msgstr "yt-dlp verwenden"
 
-#: prefsstationspage.js:295
+#: prefsstationspage.js:313
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: prefsstationspage.js:295
+#: prefsstationspage.js:313
 msgid "Update"
 msgstr "Aktualisieren"
 
-#~ msgid "Right click - Copy Song"
-#~ msgstr "Sekundärklick – Titel kopieren"
+#: searchaddbutton.js:28
+msgid "Already in your stations"
+msgstr "Bereits in der Senderliste"

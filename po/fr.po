@@ -1,0 +1,230 @@
+# French translations for PanelBlaster package.
+# Copyright (C) 2026 THE PanelBlaster'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PanelBlaster package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PanelBlaster\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 14:24+0100\n"
+"PO-Revision-Date: 2026-11-11 14:24+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: panelblastermenu.js:167 prefssettingsspage.js:22
+msgid "Settings"
+msgstr "Paramètres"
+
+#: popstreaminfo.js:204
+msgid "Ready..."
+msgstr "Prêt…"
+
+#: prefsaboutspage.js:20
+msgid "About"
+msgstr "À propos"
+
+#: prefsaboutspage.js:26
+msgid "A foss hobby project by DasJott\n"
+msgstr "Un projet libre (FOSS) de DasJott\n"
+
+#: prefsaboutspage.js:27
+msgid "continued from Ayhan Avcı (2024-2025)."
+msgstr "Poursuite du projet d'Ayhan Avcı (2024-2025)."
+
+#: prefsaboutspage.js:29
+msgid ""
+"Mid clicking the radio icon toggles play / stop.\n"
+"Don't forget to install yt-dlp &amp; gstreamer. Links at the bottom. Enjoy!"
+msgstr "Un clic central sur l'icône radio lance ou arrête la lecture.\nN'oubliez pas d'installer yt-dlp &amp; gstreamer. Liens en bas de page. Bonne écoute !"
+
+#: prefsaboutspage.js:32
+msgid "Links"
+msgstr "Liens"
+
+#: prefsaboutspage.js:35
+msgid "Project"
+msgstr "Projet"
+
+#: prefsaboutspage.js:46
+msgid "Extension"
+msgstr "Extension"
+
+#: prefsaboutspage.js:57
+msgid "yt-dlp"
+msgstr "yt-dlp"
+
+#: prefsaboutspage.js:68
+msgid "GStreamer"
+msgstr "GStreamer"
+
+#: prefssearchradio.js:31
+msgid "Radio"
+msgstr "Radio"
+
+#: prefssearchradio.js:36 prefssearchradio.js:46 prefssearchyoutube.js:72
+#: prefssearchyoutube.js:82
+msgid "Search"
+msgstr "Rechercher"
+
+#: prefssearchradio.js:40
+msgid "Channel name"
+msgstr "Nom de la chaîne"
+
+#: prefssearchradio.js:76 prefssearchyoutube.js:113
+msgid "Search Results"
+msgstr "Résultats de la recherche"
+
+#: prefssearchradio.js:172
+msgid "Country: "
+msgstr "Pays : "
+
+#: prefssearchradio.js:173
+msgid "Tags: "
+msgstr "Étiquettes : "
+
+#: prefssearchradio.js:174 prefssearchyoutube.js:143
+msgid "Link: "
+msgstr "Lien : "
+
+#: prefssearchradio.js:175
+msgid "Codec: "
+msgstr "Codec : "
+
+#: prefssearchradio.js:176
+msgid "Bitrate: "
+msgstr "Débit : "
+
+#: prefssearchyoutube.js:29
+msgid "Youtube"
+msgstr "Youtube"
+
+#: prefssearchyoutube.js:52
+msgid "yt-dlp required"
+msgstr "yt-dlp requis"
+
+#: prefssearchyoutube.js:55
+msgid "yt-dlp is not installed"
+msgstr "yt-dlp n'est pas installé"
+
+#: prefssearchyoutube.js:56
+msgid ""
+"Install yt-dlp with your package manager and make sure it is in your PATH to "
+"search for and play YouTube videos."
+msgstr "Installez yt-dlp avec votre gestionnaire de paquets et assurez-vous qu'il se trouve dans votre PATH pour rechercher et lire des vidéos YouTube."
+
+#: prefssearchyoutube.js:62
+msgid "Check again"
+msgstr "Vérifier à nouveau"
+
+#: prefssearchyoutube.js:76
+msgid "Video name"
+msgstr "Nom de la vidéo"
+
+#: prefssearchyoutube.js:142
+msgid "Likes: "
+msgstr "J'aime : "
+
+#: prefssearchyoutube.js:144
+msgid "Is Live: "
+msgstr "En direct : "
+
+#: prefssearchyoutube.js:145
+msgid "Duration: "
+msgstr "Durée : "
+
+#: prefssettingsspage.js:33
+msgid "Show hover tooltip"
+msgstr "Afficher l'infobulle au survol"
+
+#: prefssettingsspage.js:34
+msgid "Shows the song, artist, station info when you hover on the radio icon"
+msgstr "Affiche le titre, l'artiste et les informations de la station lorsque vous survolez l'icône radio"
+
+#: prefssettingsspage.js:42
+msgid "Right click - Settings"
+msgstr "Clic droit – Paramètres"
+
+#: prefssettingsspage.js:43
+msgid "Opens the settings(this) window when you right click on the radio icon."
+msgstr "Ouvre la fenêtre des paramètres (celle-ci) par un clic droit sur l'icône radio."
+
+#: prefssettingsspage.js:51
+msgid "Copy Song on Click"
+msgstr "Copier le titre au clic"
+
+#: prefssettingsspage.js:52
+msgid ""
+"Copies the artist and song title to clipboard when you click the now playing "
+"area."
+msgstr "Copie l'artiste et le titre dans le presse-papiers lorsque vous cliquez sur la zone de lecture en cours."
+
+#: prefssettingsspage.js:59
+msgid "Max Panel Height"
+msgstr "Hauteur maximale du panneau"
+
+#: prefssettingsspage.js:60
+msgid ""
+"The maximum number of stations shown in the popup before a scrollbar appears."
+msgstr "Nombre maximal de stations affichées dans la fenêtre contextuelle avant l'apparition d'une barre de défilement."
+
+#: prefssettingsspage.js:69
+msgid "Gnome Search Support"
+msgstr "Prise en charge de la recherche Gnome"
+
+#: prefssettingsspage.js:70
+msgid "Search and play your stations using Gnome search."
+msgstr "Recherchez et lisez vos stations avec la recherche Gnome."
+
+#: prefsstationspage.js:23
+msgid "Stations"
+msgstr "Stations"
+
+#: prefsstationspage.js:24
+msgid "Add, edit and delete radio stations and channels."
+msgstr "Ajouter, modifier et supprimer des stations de radio et des chaînes."
+
+#: prefsstationspage.js:32
+msgid "Stations and Channels"
+msgstr "Stations et chaînes"
+
+#: prefsstationspage.js:236
+msgid "Add a New Channel"
+msgstr "Ajouter une nouvelle chaîne"
+
+#: prefsstationspage.js:236
+msgid "Edit Channel"
+msgstr "Modifier la chaîne"
+
+#: prefsstationspage.js:254
+msgid "Channel URL:"
+msgstr "URL de la chaîne :"
+
+#: prefsstationspage.js:278
+msgid "Channel Name:"
+msgstr "Nom de la chaîne :"
+
+#: prefsstationspage.js:288
+msgid "Fetch from url"
+msgstr "Récupérer depuis l'URL"
+
+#: prefsstationspage.js:310
+msgid "Use yt-dlp"
+msgstr "Utiliser yt-dlp"
+
+#: prefsstationspage.js:313
+msgid "Add"
+msgstr "Ajouter"
+
+#: prefsstationspage.js:313
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: searchaddbutton.js:28
+msgid "Already in your stations"
+msgstr "Déjà dans vos stations"
