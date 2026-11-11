@@ -6,11 +6,13 @@ import Gdk from 'gi://Gdk';
 import Soup from 'gi://Soup';
 import * as Utils from "./utils.js";
 import * as Constants from "./constants.js";
+import { SearchAddButton } from "./searchaddbutton.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const SearchRadioPageHandler = class ChannelInfo {
     constructor(panelBlasterPrefs) {
         this._panelBlasterPrefs = panelBlasterPrefs;
+        this._addButtons = [];
         this._window = panelBlasterPrefs._window;
         this._httpSession = new Soup.Session({
             user_agent: "PanelBlaster",
@@ -61,6 +63,8 @@ export const SearchRadioPageHandler = class ChannelInfo {
     }
     createSearchResult() {
         if (this.searchResults) this._searchPage.remove(this.searchResults);
+        this._addButtons = [];
+        this._searchToken = {}; //Identifies the current search; older responses are dropped
         this.searchResults = new Adw.PreferencesGroup();
         this.searchResults.title = _("Search Results");
         this._searchPage.add(this.searchResults);
@@ -76,6 +80,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
                 this.setServer(() => this.search());
                 return;
             }
+            const token = this._searchToken;
             let params = {
                 limit: `${Constants.MAX_RADIO_SEARCH_RESULTS}`
             };
@@ -89,6 +94,8 @@ export const SearchRadioPageHandler = class ChannelInfo {
                 (_httpSession, result) => {
                     try {
                         let bytes = _httpSession.send_and_read_finish(result);
+                        // A newer search replaced this one: don't mix its results into the new list.
+                        if (token !== this._searchToken) return;
                         if (message.get_status() !== Soup.Status.OK) {
                             this.retrySearch();
                             return;
@@ -103,7 +110,7 @@ export const SearchRadioPageHandler = class ChannelInfo {
                         } else { console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_JSON_EMPTY}`); }
                     } catch (e) {
                         console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} [${e}]`);
-                        this.retrySearch();
+                        if (token === this._searchToken) this.retrySearch();
                     }
                 }
             );
@@ -162,16 +169,14 @@ export const SearchRadioPageHandler = class ChannelInfo {
                 + _("Bitrate: ") + apiStation.bitrate + "kb/s\n";
 
             act.subtitle = Utils.processSpecialCharacters(subtitle, true);
-            const addButton = new Gtk.Button({
-                valign: Gtk.Align.CENTER,
-                icon_name: Constants.ICON_ADD_CHANNEL,
-            });
-            addButton.get_style_context().add_class('circular');
-            addButton.connect('clicked', () => {
-                this._panelBlasterPrefs.channelsChanged = true;
-                this.addChannel(apiStation);
-            });
-            act.add_suffix(addButton);
+            const addButton = new SearchAddButton(
+                () => this.isChannelAdded(apiStation),
+                () => {
+                    this._panelBlasterPrefs.channelsChanged = true;
+                    this.addChannel(apiStation);
+                });
+            this._addButtons.push(addButton);
+            act.add_suffix(addButton.widget);
             this.loadThumbnail(act, apiStation);
             this.searchResults.add(act);
         } catch (e) { console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_ADD_SEARCH_ROW} [${e}]`); }
@@ -216,6 +221,14 @@ export const SearchRadioPageHandler = class ChannelInfo {
         catch (error) {
             console.debug(`${Constants.LOG_PREFIX_RADIO_SEARCH} ${Constants.LOG_ERROR_SAVE_THUMBNAIL}: [${favicon}] [${error}]`);
         }
+    }
+
+    refreshAddButtons() {
+        for (const b of this._addButtons) b.refresh();
+    }
+    isChannelAdded(channel) {
+        const encodedUri = Utils.processSpecialCharacters(channel.url_resolved, true);
+        return this._panelBlasterPrefs._stationsPageHandler.channelExists(encodedUri);
     }
 
     addChannel(channel) {

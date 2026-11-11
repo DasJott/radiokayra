@@ -18,15 +18,20 @@ export const RadioPlayer = class RadioPlayer {
     this.pipeline = new Gst.Pipeline({ name: "PanelBlaster Stream" });
     this.playing = false;
     this.initialized = true;
+    // The bus belongs to the pipeline, so watch it once. Watching it on every channel change
+    // stacked up handlers and made every Gst message fire the callbacks multiple times.
+    this.readTags();
   }
   changeChannel(uri) {
     if (!this.initialized) this.initPipeLine();
-    if (this.source !== null) this.pipeline.remove(this.source);
+    if (this.source !== null) {
+      this.source.set_state(Gst.State.NULL);
+      this.pipeline.remove(this.source);
+    }
     this.source = Gst.ElementFactory.make("playbin3", "source");
     this.source.set_property("uri", uri);
     this.source.set_property("volume", this.volume);
     this.pipeline.add(this.source);
-    this.readTags();
 
     this.source.set_property("flags", 0x00000080 | 0x00000010 | 0x00000002); //https://gstreamer.freedesktop.org/documentation/playback/playsink.html?gi-language=javascript#GstPlayFlags
   }
@@ -51,6 +56,7 @@ export const RadioPlayer = class RadioPlayer {
   disconnectSourceBus() {
     if (this.sourceBusId) {
       this.sourceBus.disconnect(this.sourceBusId);
+      this.sourceBus.remove_signal_watch();
       this.sourceBusId = 0;
     }
   }
@@ -81,8 +87,11 @@ export const RadioPlayer = class RadioPlayer {
           let artist = "";
           let title = "";
 
-          if (tagList.get_string("artist") !== null) artist = tagList.get_string("artist")[1];
-          if (tagList.get_string("title") !== null) artist = tagList.get_string("title")[1];
+          // get_string returns [found, value]; the array itself is never null.
+          const [hasArtist, artistValue] = tagList.get_string("artist");
+          const [hasTitle, titleValue] = tagList.get_string("title");
+          if (hasArtist && artistValue) artist = artistValue;
+          if (hasTitle && titleValue) title = titleValue;
           if (this.onTagChanged !== null) this.onTagChanged(artist, title);
           break;
         }

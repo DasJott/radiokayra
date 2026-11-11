@@ -48,7 +48,8 @@ export const StreamInfoPopup = GObject.registerClass(
 
             //Loading info
             this._loadingSpinner = new Animation.Spinner(16);
-            this._streamLayout.add_child(this._loadingSpinner);
+            this._loadingSpinner.set_x_align(Clutter.ActorAlign.CENTER);
+            this._loadingSpinner.set_y_align(Clutter.ActorAlign.CENTER);
 
             this._loadtxt = new St.Label({
                 text: "",
@@ -83,7 +84,15 @@ export const StreamInfoPopup = GObject.registerClass(
             });
 
             this._thumbnail.hide();
-            this._streamLayout.add_child(this._thumbnail);
+            // Bin lets the loading spinner sit on top of the thumbnail without adding height.
+            this._thumbnailBin = new St.Widget({
+                layout_manager: new Clutter.BinLayout(),
+                x_align: Clutter.ActorAlign.CENTER,
+                x_expand: true,
+            });
+            this._thumbnailBin.add_child(this._thumbnail);
+            this._thumbnailBin.add_child(this._loadingSpinner);
+            this._streamLayout.add_child(this._thumbnailBin);
 
             //Song duration
             this._durationLabel = new St.Label({
@@ -155,14 +164,15 @@ export const StreamInfoPopup = GObject.registerClass(
         copySongToClipboard() {
             if (!this._settings || !this._settings.get_boolean(Constants.SCHEMA_RIGHTCLICK_COPYSONG))
                 return Clutter.EVENT_PROPAGATE;
-            let song = this._artist;
+            let song = this._artist ?? "";
             if (!Utils.isEmptyString(song)) song += " ";
-            song += this._title;
+            song += this._title ?? "";
             if (!Utils.isEmptyString(song))
                 St.Clipboard.get_default().set_text(St.ClipboardType.CLIPBOARD, song);
             return Clutter.EVENT_STOP;
         }
         statePlaying(channelBox) {
+            this._thumbnail.opacity = 255;
             this._onair.show();
             this._thumbnail.show();
             this._channelNameLabel.show();
@@ -181,16 +191,12 @@ export const StreamInfoPopup = GObject.registerClass(
             //YtdlpHandler.getChannelJson_async(channelBox._channelInfo.getId(), channelBox._channelInfo.getUri(), this);
         }
         stateLoading() {
-            this._onair.hide();
-            this._channelNameLabel.hide();
-            this._thumbnail.hide();
-            this._songLabel.hide();
-            this._loadtxt.set_text(_("Loading..."));
+            this._thumbnail.opacity = 110;
             this._loadingSpinner.play();
-            this._loadtxt.show();
             this._loadingSpinner.show();
         }
         stateReady() {
+            this._thumbnail.opacity = 255;
             this._onair.show();
             this._thumbnail.show();
             this._channelNameLabel.show();

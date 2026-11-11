@@ -3,16 +3,21 @@ import GLib from 'gi://GLib';
 import * as Constants from "./constants.js";
 
 export function processSpecialCharacters(str, isEncode) {
-  new Map([
+  const entities = [
     ["&", "&amp;"],
     ["<", "&lt"],
     [">", "&gt"],
     ['"', "&quot;"],
     ["'", "&apos;"],
-  ]).forEach((value, key) => {
-    if (isEncode) str = str.replaceAll(key, value);
-    else str = str.replaceAll(value, key);
-  });
+  ];
+  // "&" has to be the first to encode and the last to decode. Decoding it first turned
+  // an encoded literal "&lt" (stored as "&amp;lt") into "<" and corrupted URLs like "?a=1&lt=2".
+  // The stored format is unchanged, so existing channels.json files stay valid.
+  if (isEncode) {
+    for (const [key, value] of entities) str = str.replaceAll(key, value);
+  } else {
+    for (const [key, value] of entities.slice().reverse()) str = str.replaceAll(value, key);
+  }
   return str;
 }
 

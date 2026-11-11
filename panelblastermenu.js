@@ -28,12 +28,15 @@ export const PanelBlasterMenuButton = GObject.registerClass(
     },
     class PanelBlasterMenuButton extends PanelMenu.Button {
         destroy() {
+            this._destroyed = true;
             this._player.stop();
             this._player.disconnectSourceBus();
 
-            this._settings.disconnect(this._settings_settings_changed_handler);
+            this._settings.disconnect(this._settings_changed_handler);
             this._settingsMenuItem.disconnect(this._settings_menu_activate_handler);
             this._settings.disconnect(this._height_changed_handler);
+            this.menu.disconnect(this._menu_open_handler);
+            this._settings.disconnect(this._search_event_handler);
 
             this.setTrayIconStopped();
             this._controlsPopup.clear();
@@ -112,7 +115,9 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             //REFRESH CHANNELS EVENT
             this._settings_changed_handler = this._settings.connect("changed::" + Constants.SCHEMA_CHANNELS_CHANGE_EVENT, () => {
-                this.addChannels();
+                // Rebuild lazily: only flag it here, the list is regenerated when the menu opens.
+                this._channelsDirty = true;
+                if (this.menu.isOpen) this.addChannels();
             });
             //REFRESH CHANNELS EVENT
 
@@ -183,7 +188,9 @@ export const PanelBlasterMenuButton = GObject.registerClass(
                 this._updateChannelListHeight();
             });
             this._menu_open_handler = this.menu.connect("open-state-changed", (_menu, open) => {
-                if (open) this._updateChannelListHeight();
+                if (!open) return;
+                if (this._channelsDirty) this.addChannels();
+                this._updateChannelListHeight();
             });
             //PANEL HEIGHT EVENT
 
@@ -213,7 +220,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
                     this._provider = new PanelBlasterSearchProvider.SearchProvider(extension, this);
                     Main.overview.searchController.addProvider(this._provider);
                 }
-                else {
+                else if (this._provider !== null) {
                     Main.overview.searchController.removeProvider(this._provider);
                     this._provider = null;
                 }
@@ -223,6 +230,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             this.setTrayIconStopped();
         }
         async addChannels() {
+            this._channelsDirty = false;
             const loadToken = (this._channelsLoadToken = (this._channelsLoadToken ?? 0) + 1);
             let channelsReadWrite = new Channels.ChannelsReadWrite(panelBlasterPanel._path);
             let channels = await channelsReadWrite.getChannels();
@@ -355,6 +363,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             panelBlasterPanel.onChannelChanged(channel);
         }
         onShortChannelJsonSuccess(channelBox, jsonData) {
+            if (this._destroyed) return; //yt-dlp returned after the extension was disabled
             if (!Utils.isEmptyString(panelBlasterPanel._lastClickedChannelId) && channelBox._channelInfo.getId() !== panelBlasterPanel._lastClickedChannelId)
                 return; //User clicked another channel before yt-dlp returned. Don't do anything!
             panelBlasterPanel._activeChannel.setResolvedUrl(jsonData.url);
@@ -369,7 +378,11 @@ export const PanelBlasterMenuButton = GObject.registerClass(
         }
         onShortChannelJsonError(errormsg) {
             console.warn(`${Constants.LOG_PREFIX_EXTENSION} ${Constants.LOG_PROCESSED_URL_ERROR}:[${errormsg}]`);
-            Main.notify('yt-dlp error', errormsg);
+            if (this._destroyed) return;
+            // Don't leave the UI stuck in the loading state when yt-dlp fails.
+            panelBlasterPanel.setTrayIconStopped();
+            panelBlasterPanel.stateReady();
+            Main.notify('yt-dlp error', String(errormsg?.message ?? errormsg));
         }
         playResolvedUrl() {
             let url = panelBlasterPanel._activeChannel.getResolvedUrl();

@@ -44,7 +44,7 @@ export const StationsPageHandler = class StationsPageHandler {
     }
 
     async populateChannels() {
-        this._channelsReadWrite = new Channels.ChannelsReadWrite(this.path);
+        this._channelsReadWrite = new Channels.ChannelsReadWrite(this._panelBlasterPrefs.path);
         this._channels = await this._channelsReadWrite.getChannels();
         if (this._channels === null) {
             // Loading failed: keep _channels null so editing stays disabled and the file is not overwritten.
@@ -120,6 +120,9 @@ export const StationsPageHandler = class StationsPageHandler {
             let channelData = this._channels[index];
             if (channelData.id === id) {
                 this._channels.splice(index, 1);
+                // Keep the row list in sync, otherwise move up/down swap with a deleted row.
+                const rowIndex = this._rows.indexOf(row);
+                if (rowIndex >= 0) this._rows.splice(rowIndex, 1);
                 this.writeChannels();
 
                 //Delete thumbnail, if exists
@@ -137,6 +140,17 @@ export const StationsPageHandler = class StationsPageHandler {
         for (let index = 0; index < this._channels.length; ++index) this._channels[index].order = index;
 
         this._channelsReadWrite.writeChannelsFile(this._channels);
+
+        // Live-update the panel popup menu while the settings window is still open.
+        try {
+            this._panelBlasterPrefs.getSettings().set_string(Constants.SCHEMA_CHANNELS_CHANGE_EVENT, Utils.uuidv4());
+        } catch (e) {
+            console.warn(`${Constants.LOG_PREFIX_CHANNELS} [${e}]`);
+        }
+
+        // Keep the "already added" state of the search result buttons in sync.
+        this._panelBlasterPrefs._searchRadioPageHandler?.refreshAddButtons();
+        this._panelBlasterPrefs._searchYoutubePageHandler?.refreshAddButtons();
     }
     moveDownChannel(row) {
         let id = row.name;
@@ -306,6 +320,8 @@ export const StationsPageHandler = class StationsPageHandler {
             let useYtdlp = this.ytdlpCheck.get_active();
             let name = this.nameEntry.get_buffer().text;
 
+            if (Utils.isEmptyString(uri.trim())) return; //Nothing to save without a URL
+
             //Encode special characters
             let encodedUri = Utils.processSpecialCharacters(uri, true);
             let encodedName = Utils.processSpecialCharacters(name, true);
@@ -368,6 +384,7 @@ export const StationsPageHandler = class StationsPageHandler {
         dialog.present(this._window);
     }
     onFullChannelJsonReceived(id, channelData, error) {
+        this.loadingSpinner?.stop();
         if (channelData === null) {
             console.warn(`${Constants.LOG_PREFIX_YOUTUBE_HANDLER} ${Constants.LOG_ERROR_GET_FULL_JSON}:[${error}]`);
             return;
@@ -375,8 +392,7 @@ export const StationsPageHandler = class StationsPageHandler {
         let title = "";
         if (channelData.playlist_count >= 1) title = channelData.title; //Ytdlp behaviour
         else title = channelData.fulltitle;
-        this.nameEntry.get_buffer().text = title;
-        this.loadingSpinner.stop();
+        this.nameEntry.get_buffer().text = title ?? "";
     }
 
     getChannelInfoById(id) {
@@ -413,6 +429,7 @@ export const StationsPageHandler = class StationsPageHandler {
     }
 
     addChannelInfo(newId, newName, newUri, newUseYtdlp) {
+        if (!this._channels) return; //Channels not loaded (yet)
         let newOrder = this._channels.length + 1;
         const newChannel = {
             id: newId,
@@ -434,6 +451,7 @@ export const StationsPageHandler = class StationsPageHandler {
         this.fillChannelRow(channelInfo);
     }
     channelExists(encodedUri) {
+        if (!this._channels) return false;
         for (let index = 0; index < this._channels.length; ++index) {
             if (this._channels[index].uri === encodedUri) return true;
         }

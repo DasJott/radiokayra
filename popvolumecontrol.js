@@ -47,14 +47,13 @@ export const VolumeControlPopup = GObject.registerClass(
 
         }
         clear() {
-            this._volumeLayout?.destroy();
-            this._volumeLayout = null;
-
+            // Disconnect first, destroying the actors afterwards.
             this._slider.disconnect(this._slider_value_handler);
+            this._mute_icon.disconnect(this._mute_press_handler);
+
             this._volumeLayout?.destroy();
             this._volumeLayout = null;
 
-            this._mute_icon.disconnect(this._mute_press_handler);
             this._mute_icon?.destroy();
             this._mute_icon = null;
 

@@ -52,8 +52,11 @@ export class SearchProvider {
      * @param {string} result - The result identifier
      * @param {string[]} terms - The search terms
      */
-    activateResult(result, terms) {
+    async activateResult(result, terms) {
         console.debug(`activateResult(${result}, [${terms}])`);
+
+        // The popup list is rebuilt lazily; make sure it matches the stations file first.
+        if (this._menu._channelsDirty) await this._menu.addChannels();
 
         let channelBox = this._menu.findChannelBox(result);
         if (channelBox !== null) this._menu.onChannelChanged(channelBox);
@@ -197,7 +200,8 @@ async getInitialResultSet(terms, cancellable) {
 
         for (let i = 0; i < channels.length; ++i) {
             let channelData = channels[i];
-            if (channelData.name.toLowerCase().includes(search)) identifiers.push(channelData.id);
+            // Names are stored encoded (e.g. "&amp;"), so decode before matching.
+            if (Utils.processSpecialCharacters(channelData.name, false).toLowerCase().includes(search)) identifiers.push(channelData.id);
         }
 
         return identifiers;

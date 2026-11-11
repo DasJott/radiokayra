@@ -63,8 +63,10 @@ export const ControlsPopup = GObject.registerClass(
         }
 
         clear() {
-            if (this._play_click_handler !== null)
+            if (this._play_click_handler) {
                 this.disconnect(this._play_click_handler);
+                this._play_click_handler = null;
+            }
 
             this._controlsLayout?.destroy();
             this._controlsLayout = null;

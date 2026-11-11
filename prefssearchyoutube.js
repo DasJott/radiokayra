@@ -5,6 +5,7 @@ import Gdk from 'gi://Gdk';
 import * as Utils from "./utils.js";
 import * as YtdlpHandler from "./ytdlphandler.js";
 import * as Constants from "./constants.js";
+import { SearchAddButton } from "./searchaddbutton.js";
 import { gettext as _, } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
 export const SearchYoutubePageHandler = class ChannelInfo {
@@ -12,9 +13,12 @@ export const SearchYoutubePageHandler = class ChannelInfo {
         this.panelBlasterPrefs = panelBlasterPrefs;
         this.window = panelBlasterPrefs._window;
         this.proc = null;
+        this._addButtons = [];
     }
     clear() {
-
+        // Don't leave yt-dlp running after the settings window is closed.
+        try { this.proc?.force_exit(); } catch (e) { /* already finished */ }
+        this.proc = null;
     }
     createPage() {
         this.searchPage = new Adw.PreferencesPage();
@@ -55,9 +59,11 @@ export const SearchYoutubePageHandler = class ChannelInfo {
 
     }
     createSearchResult() {
+        if (this.searchEntry.get_text().trim().length === 0) return;
         if (this.searchResults)
             this.searchPage.remove(this.searchResults);
 
+        this._addButtons = [];
         this.searchResults = new Adw.PreferencesGroup();
         this.searchResults.title = _("Search Results");
         this.searchPage.add(this.searchResults);
@@ -94,16 +100,14 @@ export const SearchYoutubePageHandler = class ChannelInfo {
                 + _("Duration: ") + youtubeVideoData.duration + "\n";
             act.subtitle = Utils.processSpecialCharacters(subtitle, true);
 
-            const addButton = new Gtk.Button({
-                valign: Gtk.Align.CENTER,
-                icon_name: Constants.ICON_BUTTON_SEARCH_ADD,
-            });
-            addButton.get_style_context().add_class('circular');
-            addButton.connect('clicked', () => {
-                this.panelBlasterPrefs.channelsChanged = true;
-                this.addYoutubeVideo(youtubeVideoData);
-            });
-            act.add_suffix(addButton);
+            const addButton = new SearchAddButton(
+                () => this.isVideoAdded(youtubeVideoData),
+                () => {
+                    this.panelBlasterPrefs.channelsChanged = true;
+                    this.addYoutubeVideo(youtubeVideoData);
+                });
+            this._addButtons.push(addButton);
+            act.add_suffix(addButton.widget);
             this.loadThumbnail(act, youtubeVideoData.thumbnail);
             this.searchResults.add(act);
 
@@ -126,6 +130,14 @@ export const SearchYoutubePageHandler = class ChannelInfo {
             act.add_prefix(thumbNail);
         }
         catch (error) { console.warn(`${Constants.LOG_PREFIX_YOUTUBE_SEARCH} ${Constants.LOG_ERROR_LOAD_THUMBNAIL} 2:  [${error}] [${thumbnailPath}]`); }
+    }
+
+    refreshAddButtons() {
+        for (const b of this._addButtons) b.refresh();
+    }
+    isVideoAdded(youtubeVideoData) {
+        const encodedUri = Utils.processSpecialCharacters(youtubeVideoData.url, true);
+        return this.panelBlasterPrefs._stationsPageHandler.channelExists(encodedUri);
     }
 
     addYoutubeVideo(youtubeVideoData) {
