@@ -100,6 +100,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
         _init(extension) {
             super._init(0.0, "PanelBlasterMenuButton");
+            this.add_style_class_name("panelblaster-button");
             panelBlasterPanel = this;
             this._shellVersion = this.getShellversion();
             this._lastClickedChannelId = "";

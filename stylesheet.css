@@ -66,3 +66,16 @@ main-menu-section StButton.ci-pin-btn {
     text-align: center;
     color: white;
 }
+
+/* Compact, round panel button (same footprint as a single-icon indicator) */
+.panel-button.panelblaster-button {
+    -natural-hpadding: 0;
+    -minimum-hpadding: 0;
+    padding-left: 0;
+    padding-right: 0;
+    min-width: 32px;
+}
+.panel-button.panelblaster-button .system-status-icon {
+    margin: 0;
+    padding: 0;
+}
