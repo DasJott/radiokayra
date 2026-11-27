@@ -95,19 +95,30 @@ export const PanelBlasterMenuButton = GObject.registerClass(
                     return Clutter.EVENT_STOP;
                 }
             }
-            return super.vfunc_event(event);
+            // Older shells: PanelMenu.Button handles clicks here. Shell 50 no longer implements
+            // vfunc_event, and calling super would throw on every single event.
+            try {
+                return super.vfunc_event(event);
+            } catch (_e) {
+                return Clutter.EVENT_PROPAGATE;
+            }
         }
 
         _init(extension) {
             super._init(0.0, "PanelBlasterMenuButton");
             this.add_style_class_name("panelblaster-button");
             // Make the button as wide as the panel is high -> a true circle, whatever the panel height.
-            this.connect("notify::height", () => {
-                const h = Math.round(this.height);
-                if (h > 0 && h !== this._lastSquareSize) {
-                    this._lastSquareSize = h;
-                    this.set_style(`min-width: ${h}px;`);
-                }
+            // PanelMenu.ButtonBox overrides get_preferred_width(): width = child + 2 * -natural-hpadding
+            // (min-width / padding are ignored), so the horizontal padding is what has to be tuned.
+            // Inline style beats theme / other extensions' rules. 'height' does not notify on
+            // allocation, so watch the allocation instead.
+            this.connect("notify::allocation", () => {
+                const h = Math.round(this.get_height());
+                if (h <= 0 || h === this._lastSquareSize || !this._trayIcon) return;
+                this._lastSquareSize = h;
+                const iconWidth = this._trayIcon.get_preferred_width(-1)[1];
+                const pad = Math.max(0, Math.round((h - iconWidth) / 2));
+                this.set_style(`-natural-hpadding: ${pad}px; -minimum-hpadding: ${pad}px;`);
             });
             panelBlasterPanel = this;
             this._shellVersion = this.getShellversion();
@@ -136,6 +147,9 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             this._trayIcon = new St.Icon({
                 gicon: this._iconStopped,
                 style_class: "system-status-icon",
+                style: "margin: 0; padding: 0;",
+                x_align: Clutter.ActorAlign.CENTER,
+                y_align: Clutter.ActorAlign.CENTER,
             });
             this._tooltip = new St.Label({ style_class: 'song-info-panel-tooltip' });
             this.label_actor = this._tooltip;
