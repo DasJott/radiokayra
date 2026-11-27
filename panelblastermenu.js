@@ -101,6 +101,14 @@ export const PanelBlasterMenuButton = GObject.registerClass(
         _init(extension) {
             super._init(0.0, "PanelBlasterMenuButton");
             this.add_style_class_name("panelblaster-button");
+            // Make the button as wide as the panel is high -> a true circle, whatever the panel height.
+            this.connect("notify::height", () => {
+                const h = Math.round(this.height);
+                if (h > 0 && h !== this._lastSquareSize) {
+                    this._lastSquareSize = h;
+                    this.set_style(`min-width: ${h}px;`);
+                }
+            });
             panelBlasterPanel = this;
             this._shellVersion = this.getShellversion();
             this._lastClickedChannelId = "";
