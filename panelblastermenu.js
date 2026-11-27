@@ -71,6 +71,20 @@ export const PanelBlasterMenuButton = GObject.registerClass(
 
             super.destroy();
         }
+        _updateSquareSize() {
+            if (!this._trayIcon) return;
+            // The button's own height is unreliable right at login (it was 16 on the very first
+            // allocation) and its width lags behind the style, so use the panel height as target.
+            const h = Math.round(Main.panel.get_height());
+            const iconWidth = Math.round(this._trayIcon.get_preferred_width(-1)[1]);
+            if (h <= 0 || iconWidth <= 0) return;
+
+            const pad = Math.max(0, Math.round((h - iconWidth) / 2));
+            if (pad === this._pad) return;
+            console.log(`${Constants.LOG_PREFIX_EXTENSION} round button: panel h=${h} icon=${iconWidth} pad ${this._pad} -> ${pad}`);
+            this._pad = pad;
+            this.set_style(`-natural-hpadding: ${pad}px; -minimum-hpadding: ${pad}px;`);
+        }
         setTrayIconStopped() {
             this._trayIcon.set_gicon(this._iconStopped);
         }
@@ -112,14 +126,7 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             // (min-width / padding are ignored), so the horizontal padding is what has to be tuned.
             // Inline style beats theme / other extensions' rules. 'height' does not notify on
             // allocation, so watch the allocation instead.
-            this.connect("notify::allocation", () => {
-                const h = Math.round(this.get_height());
-                if (h <= 0 || h === this._lastSquareSize || !this._trayIcon) return;
-                this._lastSquareSize = h;
-                const iconWidth = this._trayIcon.get_preferred_width(-1)[1];
-                const pad = Math.max(0, Math.round((h - iconWidth) / 2));
-                this.set_style(`-natural-hpadding: ${pad}px; -minimum-hpadding: ${pad}px;`);
-            });
+            this.connect("notify::allocation", () => this._updateSquareSize());
             panelBlasterPanel = this;
             this._shellVersion = this.getShellversion();
             this._lastClickedChannelId = "";
@@ -156,6 +163,9 @@ export const PanelBlasterMenuButton = GObject.registerClass(
             Main.layoutManager.addChrome(this._tooltip);
 
             this.add_child(this._trayIcon);
+            // The icon size can change after the first layout (theme / stylesheet applied late at login).
+            this._trayIcon.connect("notify::allocation", () => this._updateSquareSize());
+            this._trayIcon.connect("style-changed", () => this._updateSquareSize());
 
             this.initRadioCallbacks();
 
